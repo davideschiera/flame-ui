@@ -3,21 +3,43 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
     var app = new EmberApp(defaults, {
-        // Add options here
+        fingerprint: {
+            //
+            // Disable fingerprinting since we're going to inline content anyway
+            //
+            enabled: false
+        }
     });
 
-    // Use `app.import` to add additional libraries to the generated
-    // output files.
-    //
-    // If you need to use different assets in different
-    // environments, specify an object as the first parameter. That
-    // object's keys should be the environment name and the values
-    // should be the asset to use in that environment.
-    //
-    // If the library that you are including contains AMD or ES6
-    // modules that you would like to import into your application
-    // please specify an object with the list of modules as keys
-    // along with the exports of each module as its value.
+    if (app.env === 'production') {
+        //
+        // Inline Javascript and CSS files inline
+        //
+        app.options.inlineContent = {
+            'app-js':       'dist/assets/flame-ui.js',
+            'app-css':      'dist/assets/flame-ui.css',
+            'vendor-js':    'dist/assets/vendor.js',
+            'vendor-css':   'dist/assets/vendor.css'
+        };
+    } else {
+        //
+        // Leave Javascript and CSS outside the HTML for easier debugging
+        //
+        app.options.inlineContent = {
+            'app-js': {
+                content: '<script src="assets/flame-ui.js"></script>'
+            },
+            'app-css': {
+                content: '<link rel="stylesheet" href="assets/flame-ui.css">'
+            },
+            'vendor-js': {
+                content: '<script src="assets/vendor.js"></script>'
+            },
+            'vendor-css': {
+                content: '<link rel="stylesheet" href="assets/vendor.css">'
+            }
+        };
+    }
 
     return app.toTree();
 };

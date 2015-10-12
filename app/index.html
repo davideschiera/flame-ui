@@ -9,16 +9,16 @@
 
         {{content-for 'head'}}
 
-        <link rel="stylesheet" href="assets/vendor.css">
-        <link rel="stylesheet" href="assets/flame-ui.css">
+        {{content-for 'vendor-css'}}
+        {{content-for 'app-css'}}
 
         {{content-for 'head-footer'}}
     </head>
     <body>
         {{content-for 'body'}}
 
-        <script src="assets/vendor.js"></script>
-        <script src="assets/flame-ui.js"></script>
+        {{content-for 'vendor-js'}}
+        {{content-for 'app-js'}}
 
         {{content-for 'body-footer'}}
     </body>
