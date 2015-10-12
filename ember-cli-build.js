@@ -41,5 +41,7 @@ module.exports = function(defaults) {
         };
     }
 
+    app.import(app.bowerDirectory + '/d3/d3.v2.js');
+
     return app.toTree();
 };

@@ -8,7 +8,8 @@
         "ember-cli-test-loader": "ember-cli-test-loader#0.2.0",
         "ember-load-initializers": "ember-cli/ember-load-initializers#0.1.6",
         "ember-resolver": "0.1.21",
-        "loader.js": "ember-cli/loader.js#3.3.0"
+        "loader.js": "ember-cli/loader.js#3.3.0",
+        "d3": "~2.8.1"
     },
     "devDependencies": {
         "qunit": "~1.18.0",
