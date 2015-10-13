@@ -8,6 +8,12 @@ module.exports = function(defaults) {
             // Disable fingerprinting since we're going to inline content anyway
             //
             enabled: false
+        },
+        SRI: {
+            //
+            // Disable integrity check. For more information, refer to https://github.com/jonathanKingston/ember-cli-sri
+            //
+            enabled: false
         }
     });
 
