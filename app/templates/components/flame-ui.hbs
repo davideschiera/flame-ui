@@ -1,5 +1,17 @@
 <h1>Sysdig Transaction Flame</h1>
-<div id="svTrList" style="float:left">Transactions:</div>
+
+<div id="svTrList" style="float:left">
+    <b>Transactions</b>:
+    <br />
+    {{#each nodes key="@identity" as |node|}}
+        <b>{{node.node}}</b> - {{node.n}} calls -
+        <a {{action "svSwitchData" node.node "avg"}}>Avg Time</a>: {{node.avg}}
+        <a {{action "svSwitchData" node.node "min"}}>Min Time</a>: {{node.min}}
+        <a {{action "svSwitchData" node.node "max"}}>Max Time</a>: {{node.max}}
+        <br />
+    {{/each}}
+</div>
+
 <div id="svLegend" style="float:right"></div>
 <div style="clear:both"></div>
 <div id="svChartTitle">
