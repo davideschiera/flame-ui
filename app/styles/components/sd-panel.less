@@ -14,7 +14,7 @@
     display:            block;
     border-radius:      @border-radius;
     background-color:   @background-color;
-    box-shadow:         rgba(0, 0, 0, 0.117647) 0px 1px 3px 0px, rgba(0, 0, 0, 0.117647) 0px 1px 3px 0px;
+    .shadow-z-1;
 
     // Children selectors
     .flex-scaffholding {
@@ -22,14 +22,17 @@
         &.-row {
             flex-direction: row;
         }
+        &.-column {
+            flex-direction: column;
+        }
         .flex-grow {
             flex: 1 0 0;
         }
     }
 
     // Children components
-    @import 'components/sd-panel-footer';
-    @import 'components/sd-panel-header';
-    @import 'components/sd-panel-sidebar';
-    @import 'components/sd-panel-content';
+    @import './components/sd-panel-footer';
+    @import './components/sd-panel-header';
+    @import './components/sd-panel-sidebar';
+    @import './components/sd-panel-content';
 }

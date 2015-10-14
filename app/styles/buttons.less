@@ -1,0 +1,179 @@
+
+// Here are defined the classes and the modifiers for the buttons elements
+// .button class has not styles because we prefer inherit the style defined by the component
+
+.button {
+    // Variables
+    @color-hover:            rgba(0, 0, 0, 0.1);
+    @color-active:           rgba(0, 0, 0, 0.2);
+    @radius:                 2px;
+    @color:                  @black-bold;
+    @icon-color:             @black-regular;
+    @transition-time:        0.2s;
+    @transition:             background-color @transition-time ease, color @transition-time ease, box-shadow @transition-time ease;
+    @default-hover-bg:       @color-hover;
+    @primary-hover-bg:       fadeout(@color-accent, 80%);
+    @default-active-bg:      @color-active;
+    @primary-active-bg:      fadeout(@color-accent, 70%);
+    @raised-hover:           2%;
+    @raised-active:          4%;
+    @padding:                0.5714em;
+    @white-bg:               #F5F5F5;
+    @white-bg-hover:         lighten(@white-bg, 3%);
+    @white-bg-active:        lighten(@white-bg, 10%);
+
+    // Rulesets
+    background:         none;
+    border:             0;
+    padding:            0;
+    font-size:          inherit;
+
+    &.-flat, &.-raised {
+        transform:              translateZ(0); // Move animations to GPU
+        backface-visibility:    hidden;
+        padding:                @padding;
+        text-transform:         uppercase;
+        border-radius:          @radius;
+        cursor:                 pointer;
+        transition:             @transition;
+        line-height:            1em;
+        &:hover, &:focus, &:active {
+            outline:            0;
+        }
+    }
+
+    // has paddings of button but looks and acts like a simple text, useful when you need to keep same v-align of near buttons
+    &.-text {
+        display: inline-block;
+        padding: @padding;
+    }
+
+    &:disabled, &.-disabled {
+        cursor: default;
+    }
+    // Links can't be disabled so we disable the click using CSS
+    a&.-disabled {
+        pointer-events: none;
+    }
+    // -inline: adds negative margins to make the element looks inline with others
+    &.-inline {
+        margin: -@padding 0 -@padding 0;
+    }
+    // -nomarginleft: adds negative margin to make the left edge of the icon inline wihth the edge of the container
+    &.-no-margin-left {
+        margin-left: -@padding;
+    }
+    // -nomarginright: adds negative margin to make the right edge of the icon inline wihth the edge of the container
+    &.-no-margin-right {
+        margin-right: -@padding;
+    }
+
+    // Buttons with just icons have a different style
+    &.-icon {
+        border-radius: 100%;
+        > i {
+            line-height:    inherit;
+            font-size:      inherit;
+            vertical-align: top;
+            display:        inline-block;
+            margin-right:   0;
+        }
+    }
+
+    &.-icon.-primary.-raised > i {
+        color: inherit;
+    }
+
+    &.-primary {
+        &.-raised {
+            color:              #FFF;
+            background-color:   @color-accent;
+            &:hover, &:focus {
+                background-color: darken(@color-accent, @raised-hover);
+            }
+            &:active {
+                background-color: darken(@color-accent, @raised-active);
+            }
+        }
+        &.-flat {
+            color: @color-accent;
+            &:hover, &:focus {
+                background-color: @primary-hover-bg;
+            }
+            &:active {
+                background-color: @primary-active-bg;
+            }
+        }
+    }
+    &.-white {
+        &.-flat, &.-raised {
+            color:            @black-regular;
+            background-color: @white-bg;
+            &:hover, &:focus {
+                background-color: @white-bg-hover;
+            }
+            &:active {
+                background-color: @white-bg-active;
+            }
+        }
+    }
+
+    &.-flat {
+        &:hover {
+            background-color: @default-hover-bg;
+        }
+        &:active {
+            background-color: @default-active-bg;
+        }
+        &:disabled, &.-disabled {
+            &, &:hover, &:focus, &:active {
+                color:              fadeout(@color, 74%);
+                background-color:   transparent;
+            }
+        }
+    }
+    &.-raised {
+        .shadow-z-1();
+        &:active {
+            .shadow-z-1-active();
+        }
+        &:disabled, &.-disabled {
+            &, &:hover, &:focus, &:active {
+                box-shadow:         none;
+                background-color:   fadeout(#000, 96%);
+                color:              fadeout(@color, 50%);
+            }
+        }
+    }
+
+    &.-small {
+        font-size: 0.7em;
+    }
+    &.-big {
+        line-height:    1em;
+        font-size:      1.4em;
+    }
+
+    &.-hidden {
+        display: none !important;
+    }
+
+    &.-with-icon {
+        > i {
+            margin-right: 5px;
+        }
+    }
+}
+
+// Mozilla specific rulesets
+@-moz-document url-prefix() {
+    .button.-flat, .button.-raised {
+        display:            inline-block;
+    }
+}
+// Safari specific rulesets
+::-webkit-full-page-media, _:future, :root {
+    .button.-flat, .button.-raised {
+        display:            inline-block;
+    }
+}

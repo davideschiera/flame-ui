@@ -2,14 +2,19 @@
     &:extend(.sd-panel .sd-panel-footer);
 
     // Rulesets
+    display:            flex;
+    flex-direction:     row;
     background-color:   @header-color;
     border-top:         none;
     border-bottom:      @separator;
+    font-size:          @size-title;
 
     // Children selectors
     .title {
-        font-size:      @size-title;
         font-weight:    @semibold;
         color:          @black-bold;
+    }
+    .separator {
+        flex:           1; // use this element to align everything on its right on the right
     }
 }
