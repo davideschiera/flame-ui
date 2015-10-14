@@ -6,4 +6,4 @@ export default Ember.Component.extend({
             this.sendAction('select', node, view);
         }
     }
-})
+});
