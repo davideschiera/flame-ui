@@ -9,11 +9,11 @@ export default Ember.Component.extend({
 
     setInitialState() {
         this.setProperties({
-            svShowChildLogs: false
+            isChildrenLogVisible: false
         });
     },
 
-    lines: Ember.computed('span', 'svShowChildLogs', function() {
+    lines: Ember.computed('span', 'isChildrenLogVisible', function() {
         function svAddChildLogs(loglist, dk, dv, retnow) {
             if (dv.logs !== undefined) {
                 for (var j = 0; j < dv.logs.length; j++) {
@@ -35,11 +35,11 @@ export default Ember.Component.extend({
         }
 
         var d = this.get('span');
-        var svShowChildLogs = this.get('svShowChildLogs');
+        var isChildrenLogVisible = this.get('isChildrenLogVisible');
 
         var loglist = [];
 
-        if (svShowChildLogs === false) {
+        if (isChildrenLogVisible === false) {
             svAddChildLogs(loglist, d.data.key, d.data.value, true);
         } else {
             svAddChildLogs(loglist, d.data.key, d.data.value);
@@ -71,13 +71,13 @@ export default Ember.Component.extend({
             //
             // Determine the container color
             //
-            var cName = loglist[j].d.cont;
+            var containerName = loglist[j].d.cont;
 
-            var contCol = '#000000'; // TODO = svColorMono(cName);
+            var contCol = '#000000'; // TODO = getNodeColor(containerName);
 
             lines[j] = {
                 contCol:    contCol,
-                cName:      cName,
+                containerName:      containerName,
                 col:        col,
                 k:          loglist[j].k,
                 t:          loglist[j].t,
@@ -90,7 +90,7 @@ export default Ember.Component.extend({
 
     actions: {
         showChildrenLog(show) {
-            this.set('svShowChildLogs', show);
+            this.set('isChildrenLogVisible', show);
         }
     }
 });

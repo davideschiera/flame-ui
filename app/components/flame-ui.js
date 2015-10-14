@@ -25,13 +25,13 @@ export default Ember.Component.extend({
     setInitialState() {
         var me = this;
         this.setProperties({
-            colors:         d3.scale.category10(),
-            lastcolor:      0,
-            cNames:         {},
-            cNameList:      [],
-            svFlameGraph:   null,
-            activeSpan:     null,
-            svContext:      {
+            colors:             d3.scale.category10(),
+            lastColorIndex:     0,
+            containerNames:     {},
+            containerNameList:  [],
+            chart:              null,
+            activeSpan:         null,
+            context:            {
                 detailClose: function() {
                     var svPopoutBox = d3.select(`#${me.$().attr('id')} #svPopout`);
                     if (svDetailMode !== 'zoom') {
@@ -39,7 +39,7 @@ export default Ember.Component.extend({
                         svPopoutBox.style('opacity', null);
                         svPopoutBox.style('z-index', null);
                     } else {
-                        me.get('svFlameGraph').zoomSet({ 'x': 0, 'dx': 1, 'y': 0 });
+                        me.get('chart').zoomSet({ 'x': 0, 'dx': 1, 'y': 0 });
                     }
                 },
                 detailOpen: function svDetailOpen(d) {
@@ -75,16 +75,16 @@ export default Ember.Component.extend({
                             svMakeSubgraphData(d),
                             null,
                             null,
-                            me.get('svContext'),
+                            me.get('context'),
                             {
                                 coloring:       svColorMode,
                                 growDown:       svGrowDown,
-                                svColorMono:    me.svColorMono.bind(me)
+                                getNodeColor:    me.getNodeColor.bind(me)
                             });
                         svPopoutBox.style('z-index', 1);
                         svPopoutBox.style('opacity', 1);
                     } else {
-                        me.get('svFlameGraph').zoomSet(d);
+                        me.get('chart').zoomSet(d);
                     }
                 },
                 mouseout: function () {
@@ -108,17 +108,17 @@ export default Ember.Component.extend({
     },
 
     renderChart(data, trName) {
-        this.set('svFlameGraph', new FlameGraph(
+        this.set('chart', new FlameGraph(
             d3.select(`#${this.$().attr('id')} > #chart`),
             data,
             svSvgWidth,
             svSvgHeight,
-            this.get('svContext'),
+            this.get('context'),
             {
-                'coloring': svColorMode,
-                'growDown': svGrowDown,
-                'axisLabels': true,
-                'svColorMono': this.svColorMono.bind(this)
+                coloring:       svColorMode,
+                growDown:       svGrowDown,
+                axisLabels:     true,
+                getNodeColor:   this.getNodeColor.bind(this)
             }
         ));
     },
@@ -127,24 +127,24 @@ export default Ember.Component.extend({
         d3.select(`#${this.$().attr('id')} > #chart`).html("");
     },
 
-    svColorMono(cname) {
-        var cNames = this.get('cNames');
-        var cName = cNames[cname];
-        if (cName === undefined) {
-            cName = this.get('colors')(this.get('lastcolor'));
-            cNames[cname] = cName;
-            this.get('cNameList').pushObject(cname);
-            this.incrementProperty('lastcolor');
+    getNodeColor(containerName) {
+        var containerNames = this.get('containerNames');
+        var color = containerNames[containerName];
+        if (color === undefined) {
+            color = this.get('colors')(this.get('lastColorIndex'));
+            containerNames[containerName] = color;
+            this.get('containerNameList').pushObject(containerName);
+            this.incrementProperty('lastColorIndex');
         }
 
-        return cName;
+        return color;
     },
 
-    legendItems: Ember.computed('cNameList.[]', function() {
-        return this.get('cNameList').map(function(cname) {
+    legendItems: Ember.computed('containerNameList.[]', function() {
+        return this.get('containerNameList').map(function(containerName) {
             return {
-                name:   cname,
-                color:  this.svColorMono(cname)
+                name:   containerName,
+                color:  this.getNodeColor(containerName)
             };
         }, this);
     })
@@ -164,10 +164,6 @@ var svTextPaddingRight = 10;    /* pading-right on rectangle labels */
 var svTextPaddingTop = '1.0em'; /* padding-top on rectangle labels */
 var svColorMode = 'mono';   /* coloring mode */
 var svDetailMode = 'popout';    /* detail display mode ("zoom" or "popout") */
-
-/* Program state */
-var svShowChildLogs = false;
-var svLastLogsNode;
 
 /*
  * Input: "d", a D3 node from the layout, typically resembling:
@@ -269,7 +265,7 @@ function FlameGraph(node, rawdata, pwidth, pheight, context, options) {
                 return ('#ffffff');
             }
 
-            return (options.svColorMono(d.data.value.cont));
+            return (options.getNodeColor(d.data.value.cont));
         };
     }
 
