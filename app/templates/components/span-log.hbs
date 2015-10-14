@@ -1,0 +1,7 @@
+<b>Logs for</b> <a {{action "svChildLogsVisibility" false}}>this span only</a> - <a {{action "svChildLogsVisibility" true}}>this span and childs</a>
+
+{{#each lines key="@index" as |line|}}
+    <br>
+    <text style="color:{{line.contCol}}">{{line.cName}}</text>
+    <text style="color:{{line.col}}">({{line.k}}) {{line.t}} {{line.b}}</text>
+{{/each}}

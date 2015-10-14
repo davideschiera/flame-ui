@@ -12,8 +12,6 @@ export default Ember.Component.extend({
     },
 
     didInsertElement() {
-        svLogs = d3.select('#svLogs');
-
         this.renderChart(this.attrs.data.value, this.attrs.node.value);
     },
 
@@ -32,9 +30,10 @@ export default Ember.Component.extend({
             cNames:         {},
             cNameList:      [],
             svFlameGraph:   null,
+            activeSpan:     null,
             svContext:      {
-                'detailClose': function() {
-                    var svPopoutBox = d3.select(`#${me.$().attr('id')} > #svPopout`);
+                detailClose: function() {
+                    var svPopoutBox = d3.select(`#${me.$().attr('id')} #svPopout`);
                     if (svDetailMode !== 'zoom') {
                         svPopoutBox.html('');
                         svPopoutBox.style('opacity', null);
@@ -43,7 +42,7 @@ export default Ember.Component.extend({
                         me.get('svFlameGraph').zoomSet({ 'x': 0, 'dx': 1, 'y': 0 });
                     }
                 },
-                'detailOpen': function svDetailOpen(d) {
+                detailOpen: function svDetailOpen(d) {
                     function svMakeSubgraphData(d) {
                         /*
                          * First, construct everything from the current node to all of its
@@ -68,47 +67,41 @@ export default Ember.Component.extend({
                         return (tree);
                     }
 
-                    var svPopoutBox = d3.select(`#${me.$().attr('id')} > #svPopout`);
+                    var svPopoutBox = d3.select(`#${me.$().attr('id')} #svPopout`);
                     if (svDetailMode !== 'zoom') {
                         svPopoutBox.html('');
-                        /* jsl:ignore */
-                        new FlameGraph(svPopoutBox, svMakeSubgraphData(d), null, null,
-                            svContext, {
-                            'coloring': svColorMode,
-                            'growDown': svGrowDown
+                        new FlameGraph(
+                            svPopoutBox,
+                            svMakeSubgraphData(d),
+                            null,
+                            null,
+                            me.get('svContext'),
+                            {
+                                coloring:       svColorMode,
+                                growDown:       svGrowDown,
+                                svColorMono:    me.svColorMono.bind(me)
                             });
-                        /* jsl:end */
                         svPopoutBox.style('z-index', 1);
                         svPopoutBox.style('opacity', 1);
                     } else {
                         me.get('svFlameGraph').zoomSet(d);
                     }
                 },
-                'mouseout': function () {
-                    var svTooltipBox = d3.select(`#${me.$().attr('id')} > #svTooltip`);
-                    svTooltipBox.text('').style('opacity', null);
+                mouseout: function () {
+                    me.set('activeSpan', null);
                 },
-                'mouseover': function (d, det) {
-                    var text;
-                    var span_name = det['label'];
-
-                    /* escape the key */
-                    text = '<strong>' + span_name + ') </strong>';
-                    text += '<strong>Container Name</strong>: ' +
-                        d.data.value.cont + ' ';
-                    text += '<strong>Command Line</strong>: ' +
-                        d.data.value.exe + ' ';
-                    text += '<strong>Time in this node and childs</strong>: ' +
-                        fmtTimeInterval(d.data.value.tt, 3, 1).output + ' ';
-                    text += '<strong>Time in this node</strong>: ' +
-                        fmtTimeInterval(d.data.value.t, 3, 1).output;
-                    var nconc = d.data.value.nconc;
-                    if (nconc) {
-                        text += '<br><strong>NOTE: this node has ' + nconc + ' childs. Only the slowest one is shown.</strong>';
-                    }
-
-                    var svDetails = d3.select(`#${me.$().attr('id')} > #svDetails`);
-                    svDetails.html(text);
+                mouseover: function (d, det) {
+                    me.set('activeSpan', {
+                        name:           det['label'],
+                        container:      d.data.value.cont,
+                        commandLine:    d.data.value.exe,
+                        timeTotal:      fmtTimeInterval(d.data.value.tt, 3, 1).output,
+                        timeInNode:     fmtTimeInterval(d.data.value.t, 3, 1).output,
+                        childCount:     d.data.value.nconc
+                    });
+                },
+                select: function(d) {
+                    me.sendAction('select', d);
                 }
             }
         });
@@ -132,8 +125,6 @@ export default Ember.Component.extend({
 
     destroyChart() {
         d3.select(`#${this.$().attr('id')} > #chart`).html("");
-        var svDetails = d3.select(`#${this.$().attr('id')} > #svDetails`);
-        svDetails.html("");
     },
 
     svColorMono(cname) {
@@ -175,87 +166,8 @@ var svColorMode = 'mono';   /* coloring mode */
 var svDetailMode = 'popout';    /* detail display mode ("zoom" or "popout") */
 
 /* Program state */
-var svLogs;
 var svShowChildLogs = false;
 var svLastLogsNode;
-
-
-function svChildLogsVisibility(show) {
-    svShowChildLogs = show;
-    svShowLogs(svLastLogsNode);
-}
-
-function svAddChildLogs(loglist, dk, dv, retnow) {
-    if (dv.logs !== undefined) {
-        for (var j = 0; j < dv.logs.length; j++) {
-            dv.logs[j].k = dk;
-            dv.logs[j].d = dv;
-        }
-
-        Array.prototype.push.apply(loglist, dv.logs);
-    }
-
-    if (retnow === true) {
-        return;
-    }
-
-    var childs = dv.ch;
-    for (var ch in childs) {
-        svAddChildLogs(loglist, ch, childs[ch]);
-    }
-}
-
-function svShowLogs(d) {
-    var loglist = [];
-    var content =
-        '<b>Logs for</b> <a href="javascript:svChildLogsVisibility(false)">this span only</a> - <a href="javascript:svChildLogsVisibility(true)">this span and childs</a>';
-
-    if (svShowChildLogs === false) {
-        svAddChildLogs(loglist, d.data.key, d.data.value, true);
-    } else {
-        svAddChildLogs(loglist, d.data.key, d.data.value);
-        loglist.sort(function (a, b) {
-            if (a.th === b.th) {
-                return a.tl - b.tl;
-            } else {
-                return a.th - b.th;
-            }
-        });
-    }
-
-    if (loglist) {
-        for (var j = 0; j < loglist.length; j++) {
-            var logLine = loglist[j].b.toLowerCase();
-            var col;
-
-            //
-            // Determine the log text color
-            //
-            if (logLine.indexOf("err") > -1) {
-                col = '#ff0000';
-            } else if (logLine.indexOf("warn") > -1) {
-                col = '#ff8800';
-            } else {
-                col = '#000000';
-            }
-
-            //
-            // Determine the container color
-            //
-            var cName = loglist[j].d.cont;
-
-            var contCol = '#000000'; // TODO = svColorMono(cName);
-
-            content += '<br>' +
-                '<text style="color:' + contCol + '"> ' + cName + '</text> ' +
-                '<text style="color:' + col + '"> (' + loglist[j].k + ') ' + loglist[j].t + ' ' + loglist[j].b + '</text>';
-        }
-    }
-
-    svLogs.html(content);
-
-    svLastLogsNode = d;
-}
 
 /*
  * Input: "d", a D3 node from the layout, typically resembling:
@@ -399,7 +311,7 @@ function FlameGraph(node, rawdata, pwidth, pheight, context, options) {
         attr('height', this.fg_height).
         attr('width', this.fg_rectwidth).
         attr('fill', this.fg_color).
-        on('click', this.showLogs.bind(this)).
+        on('click', context.select.bind(this)).
         on('dblclick', this.detailOpen.bind(this)).
         on('mouseover', this.mouseover.bind(this)).
         on('mouseout', this.mouseout.bind(this));
@@ -421,7 +333,7 @@ function FlameGraph(node, rawdata, pwidth, pheight, context, options) {
         attr('clip-path', function (d) {
         return ('url("#' + nodeid(d) + '")');
         }).
-        on('click', this.showLogs.bind(this)).
+        on('click', context.select.bind(this)).
         on('dblclick', this.detailOpen.bind(this)).
         on('mouseover', this.mouseover.bind(this)).
         on('mouseout', this.mouseout.bind(this)).
@@ -486,10 +398,6 @@ FlameGraph.prototype.detailClose = function () {
     if (this.fg_context !== null) {
         this.fg_context.detailClose();
     }
-};
-
-FlameGraph.prototype.showLogs = function (d) {
-    svShowLogs(d);
 };
 
 FlameGraph.prototype.detailOpen = function (d) {

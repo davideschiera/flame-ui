@@ -1,4 +1,4 @@
-<div id="svLegend" style="float:right">
+<div style="float:right">
     <b>Container Colors</b>:
     {{#each legendItems key="@identity" as |item|}}
         <br><text style="color:{{item.color}}">{{item.name}}</text>
@@ -6,18 +6,29 @@
 </div>
 <div style="clear:both"></div>
 
-<div id="svChartTitle">
+<div>
   <h2>{{node}} {{op}}</h2>
 </div>
 
 <div id="chart">
-  <div style="position: relative">
-    <div class="svPopout" id="svPopout"></div>
-  </div>
 </div>
 
-<div id="svDetails"> <b>Info</b>:</div>
+<div style="position: relative">
+    <div class="svPopout" id="svPopout"></div>
+</div>
 
-<br>
+{{#if activeSpan}}
+    <div>
+        <b>Info</b>:
+        <strong>{{activeSpan.name}})</strong>
+        <strong>Container Name</strong>: {{activeSpan.container}}
+        <strong>Command Line</strong>: {{activeSpan.commandLine}}
+        <strong>Time in this node and childs</strong>: {{activeSpan.timeTotal}}
+        <strong>Time in this node</strong>: {{activeSpan.timeInNode}}
 
-<div id="svLogs"></div>
+        {{#if activeSpan.childCount}}
+            <br>
+            <strong>NOTE: this node has {{activeSpan.childCount}} childs. Only the slowest one is shown.</strong>
+        {{/if}}
+    </div>
+{{/if}}

@@ -4,10 +4,11 @@ import fmtTimeInterval from 'flame-ui/helpers/fmtTimeInterval';
 export default Ember.Route.extend({
     model() {
         var model = Ember.Object.create({
-            avg:        svFillData(avg),
-            min:        svFillData(min),
-            max:        svFillData(max),
-            selectedOp: 'avg'
+            avg:            svFillData(avg),
+            min:            svFillData(min),
+            max:            svFillData(max),
+            selectedOp:     'avg',
+            selectedSpan:   null,
         });
 
         var nodeIds = Object.keys(model.get('avg')[''].ch);
@@ -39,6 +40,12 @@ export default Ember.Route.extend({
                 selectedOp:     view,
                 flames:         createSubTree(model.get(view), node)
             });
+        },
+
+        svShowLog: function(d) {
+            var model = this.controller.get('model');
+
+            model.set('selectedSpan', d);
         }
     }
 });

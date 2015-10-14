@@ -5,8 +5,17 @@
     select =    "svSwitchData"
 }}
 
-{{flame-ui
-    node =  model.selectedNode
-    op =    model.selectedOp
-    data =  model.flames
-}}
+{{#if model.selectedNode}}
+    {{flame-ui
+        node =      model.selectedNode
+        op =        model.selectedOp
+        data =      model.flames
+        select =    "svShowLog"
+    }}
+
+    {{#if model.selectedSpan}}
+        {{span-log
+            span =  model.selectedSpan
+        }}
+    {{/if}}
+{{/if}}
