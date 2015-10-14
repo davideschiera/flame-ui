@@ -26,18 +26,30 @@ export default Ember.Route.extend({
             selectedOp:     'avg',
             selectedSpan:   null,
             selectedNode:   (nodeIds.length > 0 ? nodeIds[0] : null),
-            flames:         (nodeIds.length > 0 ? data.avg : null)
+            flames:         (nodeIds.length > 0 ? createSubTree(data.avg, nodeIds[0]) : null)
         });
     },
 
     actions: {
         selectTransaction: function(node, view) {
             var model = this.controller.get('model');
+            var flames;
 
+            switch (view) {
+                case 'avg':
+                    flames = svFillData(avg);
+                    break;
+                case 'min':
+                    flames = svFillData(min);
+                    break;
+                case 'max':
+                    flames = svFillData(max);
+                    break;
+            }
             model.setProperties({
                 selectedNode:   node,
                 selectedOp:     view,
-                flames:         createSubTree(model.get(view), node)
+                flames:         createSubTree(flames, node)
             });
         },
 
