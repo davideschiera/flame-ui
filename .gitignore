@@ -15,3 +15,6 @@
 /libpeerconnection.log
 npm-debug.log
 testem.log
+
+# system
+.DS_Store

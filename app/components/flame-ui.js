@@ -1,10 +1,13 @@
 /* global d3 */
 
 import Ember from 'ember';
+import SPanel from '../components/s-panel';
 import fmtTimeInterval from 'flame-ui/helpers/fmt-time-interval';
 import FlameGraph from 'flame-ui/lib/flame-graph';
 
-export default Ember.Component.extend({
+export default SPanel.extend({
+    classNames: [ 'flame-ui '],
+
     init() {
         this._super();
 

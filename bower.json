@@ -1,19 +1,20 @@
 {
-    "name": "flame-ui",
-    "dependencies": {
-        "ember": "2.2.0-beta.1",
-        "ember-data": "2.2.0-beta.1",
-        "jquery": "2.1.4",
-        "ember-cli-shims": "ember-cli/ember-cli-shims#0.0.4",
-        "ember-cli-test-loader": "ember-cli-test-loader#0.2.0",
-        "ember-load-initializers": "ember-cli/ember-load-initializers#0.1.6",
-        "ember-resolver": "0.1.21",
-        "loader.js": "ember-cli/loader.js#3.3.0",
-        "d3": "~2.8.1"
-    },
-    "devDependencies": {
-        "qunit": "~1.18.0",
-        "ember-qunit": "0.4.10",
-        "ember-qunit-notifications": "0.0.7"
-    }
+  "name": "flame-ui",
+  "dependencies": {
+    "d3": "~2.8.1",
+    "ember": "2.2.0-beta.1",
+    "ember-cli-shims": "ember-cli/ember-cli-shims#0.0.4",
+    "ember-cli-test-loader": "ember-cli-test-loader#0.2.0",
+    "ember-data": "2.2.0-beta.1",
+    "ember-load-initializers": "ember-cli/ember-load-initializers#0.1.6",
+    "ember-resolver": "0.1.21",
+    "jquery": "2.1.4",
+    "loader.js": "ember-cli/loader.js#3.3.0",
+    "reset-css": "~2.0.2011012602"
+  },
+  "devDependencies": {
+    "qunit": "~1.18.0",
+    "ember-qunit": "0.4.10",
+    "ember-qunit-notifications": "0.0.7"
+  }
 }

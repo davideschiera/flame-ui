@@ -1,0 +1,24 @@
+.ember-application { // body
+    // Variables
+    @background-color:  #EFEFEF;
+
+    // Rulesets
+    background-color:   @background-color;
+    padding:            @padding-m @padding-m 0 @padding-m;
+
+    color:              @black-regular;
+    font-family:        proxima-nova, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'Segoe UI', Ubuntu, Arial, sans-serif;
+    font-size:          @size-body;
+
+    // Children selectors
+    a {
+        color:      @color-accent;
+        font-weight: @semibold;
+    }
+    b, strong {
+        font-weight: @semibold;
+    }
+    .s-panel {
+        margin-bottom:  @margin-m;
+    }
+}

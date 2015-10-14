@@ -1,0 +1,23 @@
+// Basic panel of our application:
+//
+// - These rulesets must be reusable trough the entire application and must most generic possible;
+// - If you need any specific ruleset, extend this component using the specific component's stylesheet;
+
+.s-panel {
+    // Variables
+    @border-radius:     2px;
+    @background-color:  #FFFFFF;
+    @header-color:      #F3F3F3;
+    @separator:         1px solid #D9D9D9;
+
+    // Rulesets
+    display:            block;
+    border-radius:      @border-radius;
+    background-color:   @background-color;
+    padding:            @padding-m;
+    box-shadow:         rgba(0, 0, 0, 0.117647) 0px 1px 3px 0px, rgba(0, 0, 0, 0.117647) 0px 1px 3px 0px;
+
+    @import 'components/s-panel-footer';
+    @import 'components/s-panel-header';
+
+}

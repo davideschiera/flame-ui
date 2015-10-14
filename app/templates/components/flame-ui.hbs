@@ -1,3 +1,7 @@
+{{#s-panel-header}}
+    <h1 class="title">{{node}} {{op}}</h1>
+{{/s-panel-header}}
+
 <div style="float:right">
     <b>Container Colors</b>:
     {{#each legendItems key="@identity" as |item|}}
@@ -7,10 +11,6 @@
 </div>
 <div style="clear:both"></div>
 
-<div>
-  <h2>{{node}} {{op}}</h2>
-</div>
-
 <div id="chart">
 </div>
 
@@ -18,18 +18,17 @@
     <div id="svPopout"></div>
 </div>
 
-{{#if activeSpan}}
-    <div>
-        <b>Info</b>:
-        <strong>{{activeSpan.name}})</strong>
-        <strong>Container Name</strong>: {{activeSpan.container}}
-        <strong>Command Line</strong>: {{activeSpan.commandLine}}
-        <strong>Time in this node and childs</strong>: {{activeSpan.timeTotal}}
-        <strong>Time in this node</strong>: {{activeSpan.timeInNode}}
+{{#s-panel-footer}}
+    {{#if activeSpan}}
+        <strong>{{activeSpan.name}} informations –</strong>
+        Container Name:                 <b>{{activeSpan.container}}</b>
+        Command Line:                   <b>{{activeSpan.container}}</b>
+        Time in this node and childs:   <b>{{activeSpan.container}}</b>
+        Time in this node:              <b>{{activeSpan.timeInNode}}</b>
 
         {{#if activeSpan.childCount}}
             <br>
             <strong>NOTE: this node has {{activeSpan.childCount}} childs. Only the slowest one is shown.</strong>
         {{/if}}
-    </div>
-{{/if}}
+    {{/if}}&nbsp;
+{{/s-panel-footer}}

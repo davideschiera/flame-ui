@@ -25,6 +25,11 @@ module.exports = function(environment) {
     }
   };
 
+  // Typekit
+  ENV.typekit = {
+      kitId: 'xxxxxx'
+  };
+
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;

@@ -1,4 +1,9 @@
-<b>Logs for</b> <a {{action "showChildrenLog" false}}>this span only</a> - <a {{action "showChildrenLog" true}}>this span and childs</a>
+{{#s-panel-header}}
+    <h1 class="title">
+        Logs for
+        <a href="#0" {{action "showChildrenLog" false}}>this span only</a> - <a href="#0" {{action "showChildrenLog" true}}>this span and childs</a>
+    </h1>
+{{/s-panel-header}}
 
 {{#each lines key="@index" as |line|}}
     <br>

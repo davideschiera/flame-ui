@@ -1,11 +1,12 @@
-<div>
-    <b>Transactions</b>:
-    <br />
-    {{#each transactions key="@identity" as |transaction|}}
+{{#s-panel-header}}
+    <h1 class="title">Transactions:</h1>
+{{/s-panel-header}}
+
+{{#each transactions key="@identity" as |transaction|}}
+    <div class="row">
         <b>{{transaction.node}}</b> - {{transaction.n}} calls -
         <a {{action "select" transaction.node "avg"}}>Avg Time</a>: {{transaction.avg}}
         <a {{action "select" transaction.node "min"}}>Min Time</a>: {{transaction.min}}
         <a {{action "select" transaction.node "max"}}>Max Time</a>: {{transaction.max}}
-        <br />
-    {{/each}}
-</div>
+    </div>
+{{/each}}

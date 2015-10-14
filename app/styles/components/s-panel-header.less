@@ -1,0 +1,16 @@
+.s-panel-header {
+    &:extend(.s-panel .s-panel-footer);
+
+    // Rulesets
+    background-color:   @header-color;
+    margin:             -@padding-m -@padding-m @margin-m -@padding-m;
+    border-top:         none;
+    border-bottom:      @separator;
+
+    // Children selectors
+    .title {
+        font-size:      @size-title;
+        font-weight:    @semibold;
+        color:          @black-bold;
+    }
+}

@@ -18,6 +18,7 @@ module.exports = function(defaults) {
     });
 
     app.import(app.bowerDirectory + '/d3/d3.v2.js');
+    app.import(app.bowerDirectory + '/reset-css/reset.css');
 
     return app.toTree();
 };

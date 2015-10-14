@@ -1,16 +1,14 @@
-<h1>Sysdig Transaction Flame</h1>
-
 {{transactions-table
     transactions =  model.transactions
-    select =        "selectTransaction"
+    select       =  "selectTransaction"
 }}
 
 {{#if model.selectedNode}}
     {{flame-ui
-        node =      model.selectedNode
-        op =        model.selectedOp
-        data =      model.flames
-        select =    "selectSpan"
+        node    = model.selectedNode
+        op      = model.selectedOp
+        data    = model.flames
+        select  = "selectSpan"
     }}
 
     {{#if model.selectedSpan}}
