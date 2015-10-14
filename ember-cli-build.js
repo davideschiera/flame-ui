@@ -1,5 +1,6 @@
 /* global require, module */
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
+var Funnel = require('broccoli-funnel');
 
 module.exports = function(defaults) {
     var app = new EmberApp(defaults, {
@@ -20,5 +21,13 @@ module.exports = function(defaults) {
     app.import(app.bowerDirectory + '/d3/d3.v2.js');
     app.import(app.bowerDirectory + '/reset-css/reset.css');
 
-    return app.toTree();
+    // Copy Roboto webfont:
+    var robotoAssets = new Funnel('vendor/roboto', {
+        srcDir: '/',
+        include: ['*.woff', '*.woff2', '*.eot', '*.svg', '*.ttf', ],
+        destDir: '/assets/fonts'
+    });
+    app.import('vendor/roboto/stylesheet.css');
+
+    return app.toTree(robotoAssets);
 };
