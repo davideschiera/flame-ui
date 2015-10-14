@@ -2,66 +2,161 @@
 /* jshint unused: false */
 
 import Ember from 'ember';
+import fmtTimeInterval from 'flame-ui/helpers/fmtTimeInterval';
 
 export default Ember.Component.extend({
-    selection: null,
+    init() {
+        this._super();
 
-    didInsertElement: function() {
-        var data = this.get('data');
-        var nodes = Object.keys(data.avg[''].ch);
-
-        if (nodes.length > 0) {
-            this.set('selection', nodes[0]);
-
-            svTooltipBox = d3.select('#svTooltip');
-            svPopoutBox = d3.select('#svPopout');
-            svDetails = d3.select('#svDetails');
-            svLegend = d3.select('#svLegend');
-            svLogs = d3.select('#svLogs');
-            svInit(this.attrs.data.value, this.get('selection'));
-        }
+        this.setInitialState();
     },
 
-    nodes: Ember.computed('data', function() {
-        var data = this.get('data');
-        var nodes = Object.keys(data.avg[''].ch);
+    didInsertElement() {
+        svLogs = d3.select('#svLogs');
 
-        return nodes.map(function(node) {
-            return {
-                node: node,
-                n: data.avg[""].ch[node].n,
-                avg: fmtTimeInterval(data.avg[""].ch[node].tt, 3, 1).output,
-                min: fmtTimeInterval(data.min[""].ch[node].tt, 3, 1).output,
-                max: fmtTimeInterval(data.max[""].ch[node].tt, 3, 1).output
-            };
-        });
-    }),
+        this.renderChart(this.attrs.data.value, this.attrs.node.value);
+    },
 
-    actions: {
-        svSwitchData: function(trName, which) {
-            var data;
-            var opStr;
+    didUpdateAttrs(args) {
+        this.setInitialState();
 
-            if (which === "max") {
-                data = this.attrs.data.value.max;
-                opStr = "Max";
-            } else if (which === "min") {
-                data = this.attrs.data.value.min;
-                opStr = "Min";
-            } else {
-                data = this.attrs.data.value.avg;
-                opStr = "Avg";
+        this.destroyChart();
+        this.renderChart(args.newAttrs.data.value, args.newAttrs.node.value);
+    },
+
+    setInitialState() {
+        var me = this;
+        this.setProperties({
+            colors:         d3.scale.category10(),
+            lastcolor:      0,
+            cNames:         {},
+            cNameList:      [],
+            svFlameGraph:   null,
+            svContext:      {
+                'detailClose': function() {
+                    var svPopoutBox = d3.select(`#${me.$().attr('id')} > #svPopout`);
+                    if (svDetailMode !== 'zoom') {
+                        svPopoutBox.html('');
+                        svPopoutBox.style('opacity', null);
+                        svPopoutBox.style('z-index', null);
+                    } else {
+                        me.get('svFlameGraph').zoomSet({ 'x': 0, 'dx': 1, 'y': 0 });
+                    }
+                },
+                'detailOpen': function svDetailOpen(d) {
+                    function svMakeSubgraphData(d) {
+                        /*
+                         * First, construct everything from the current node to all of its
+                         * leafs.
+                         */
+                        var tree, oldtree;
+
+                        tree = {};
+                        tree[d.data.key] = d.data.value;
+
+                        while (d.parent !== undefined) {
+                            oldtree = tree;
+                            tree = {};
+                            tree[d.parent.data.key] = {
+                                't': d.parent.data.value.t,
+                                'svTotal': d.parent.data.value.svTotal,
+                                'ch': oldtree
+                            };
+                            d = d.parent;
+                        }
+
+                        return (tree);
+                    }
+
+                    var svPopoutBox = d3.select(`#${me.$().attr('id')} > #svPopout`);
+                    if (svDetailMode !== 'zoom') {
+                        svPopoutBox.html('');
+                        /* jsl:ignore */
+                        new FlameGraph(svPopoutBox, svMakeSubgraphData(d), null, null,
+                            svContext, {
+                            'coloring': svColorMode,
+                            'growDown': svGrowDown
+                            });
+                        /* jsl:end */
+                        svPopoutBox.style('z-index', 1);
+                        svPopoutBox.style('opacity', 1);
+                    } else {
+                        me.get('svFlameGraph').zoomSet(d);
+                    }
+                },
+                'mouseout': function () {
+                    var svTooltipBox = d3.select(`#${me.$().attr('id')} > #svTooltip`);
+                    svTooltipBox.text('').style('opacity', null);
+                },
+                'mouseover': function (d, det) {
+                    var text;
+                    var span_name = det['label'];
+
+                    /* escape the key */
+                    text = '<strong>' + span_name + ') </strong>';
+                    text += '<strong>Container Name</strong>: ' +
+                        d.data.value.cont + ' ';
+                    text += '<strong>Command Line</strong>: ' +
+                        d.data.value.exe + ' ';
+                    text += '<strong>Time in this node and childs</strong>: ' +
+                        fmtTimeInterval(d.data.value.tt, 3, 1).output + ' ';
+                    text += '<strong>Time in this node</strong>: ' +
+                        fmtTimeInterval(d.data.value.t, 3, 1).output;
+                    var nconc = d.data.value.nconc;
+                    if (nconc) {
+                        text += '<br><strong>NOTE: this node has ' + nconc + ' childs. Only the slowest one is shown.</strong>';
+                    }
+
+                    var svDetails = d3.select(`#${me.$().attr('id')} > #svDetails`);
+                    svDetails.html(text);
+                }
             }
+        });
+    },
 
-            d3.select('#chart').html("");
-            svLegend.html(" ");
-            svDetails.html(" ");
+    renderChart(data, trName) {
+        this.set('svFlameGraph', new FlameGraph(
+            d3.select(`#${this.$().attr('id')} > #chart`),
+            data,
+            svSvgWidth,
+            svSvgHeight,
+            this.get('svContext'),
+            {
+                'coloring': svColorMode,
+                'growDown': svGrowDown,
+                'axisLabels': true,
+                'svColorMono': this.svColorMono.bind(this)
+            }
+        ));
+    },
 
-            this.set('selection', trName);
+    destroyChart() {
+        d3.select(`#${this.$().attr('id')} > #chart`).html("");
+        var svDetails = d3.select(`#${this.$().attr('id')} > #svDetails`);
+        svDetails.html("");
+    },
 
-            svInit(this.get('data'), trName);
+    svColorMono(cname) {
+        var cNames = this.get('cNames');
+        var cName = cNames[cname];
+        if (cName === undefined) {
+            cName = this.get('colors')(this.get('lastcolor'));
+            cNames[cname] = cName;
+            this.get('cNameList').pushObject(cname);
+            this.incrementProperty('lastcolor');
         }
-    }
+
+        return cName;
+    },
+
+    legendItems: Ember.computed('cNameList.[]', function() {
+        return this.get('cNameList').map(function(cname) {
+            return {
+                name:   cname,
+                color:  this.svColorMono(cname)
+            };
+        }, this);
+    })
 });
 
 /* Configuration */
@@ -80,139 +175,86 @@ var svColorMode = 'mono';   /* coloring mode */
 var svDetailMode = 'popout';    /* detail display mode ("zoom" or "popout") */
 
 /* Program state */
-var svTooltipBox;       /* tooltip box (D3 selection) */
-var svPopoutBox;        /* popout detail box (D3 selection) */
-var svFlameGraph;       /* main flame graph object */
-var svDetails;
-var svLegend;
 var svLogs;
-var svLastTransaction;
 var svShowChildLogs = false;
 var svLastLogsNode;
-var svContext = {
-    'detailClose': svDetailClose,
-    'detailOpen': svDetailOpen,
-    'mouseout': function () {
-        svTooltipBox.text('').style('opacity', null);
-    },
-    'mouseover': function (d, det) {
-        var text;
-        var span_name = det['label'];
 
-        /* escape the key */
-        text = '<strong>' + span_name + ') </strong>';
-        text += '<strong>Container Name</strong>: ' +
-            d.data.value.cont + ' ';
-        text += '<strong>Command Line</strong>: ' +
-            d.data.value.exe + ' ';
-        text += '<strong>Time in this node and childs</strong>: ' +
-            fmtTimeInterval(d.data.value.tt, 3, 1).output + ' ';
-        text += '<strong>Time in this node</strong>: ' +
-            fmtTimeInterval(d.data.value.t, 3, 1).output;
-        var nconc = d.data.value.nconc;
-        if (nconc) {
-            text += '<br><strong>NOTE: this node has ' + nconc + ' childs. Only the slowest one is shown.</strong>';
-        }
 
-        svDetails.html(text);
-    }
-};
-
-function svInit(data, trName) {
-    function createSubTree(fullTree, trName) {
-        var res = {};
-        res[""] = {};
-        res[""].ch = {};
-        res[""].ch[trName] = fullTree[""].ch[trName];
-
-        return res;
-    }
-
-    var tdata = createSubTree(data.avg, trName);
-
-    d3.select('#svChartTitle').html('<h2> ' + trName + ' Avg</h2>');
-
-    svFlameGraph = new FlameGraph(
-        d3.select('#chart'),
-        tdata,
-        svSvgWidth,
-        svSvgHeight,
-        svContext,
-        {
-            'coloring': svColorMode,
-            'growDown': svGrowDown,
-            'axisLabels': true
-        }
-    );
-
-    svRenderLegend();
+function svChildLogsVisibility(show) {
+    svShowChildLogs = show;
+    svShowLogs(svLastLogsNode);
 }
 
-
-//
-// convert a nanosecond time interval into a s.ns representation.
-// 1100000000 becomes 1.1s
-//
-function fmtTimeInterval(value, decimals, step) {
-    decimals = (decimals === undefined ? 2 : decimals);
-    step = (step === undefined ? 2 : step);
-
-    var units = ['ns', 'us', 'ms', 's', 'min', 'h', 'd'];
-    var absValue = Math.abs(value);
-    var multipliers = [1000, 1000, 1000, 60, 60, 24];
-    var multiplier = 1;
-    var i;
-    for (i = 0; i < units.length; i++) {
-        if (absValue < multiplier * step * multipliers[i]) {
-            break;
-        } else if (i < units.length - 1) {
-            multiplier = multiplier * multipliers[i];
+function svAddChildLogs(loglist, dk, dv, retnow) {
+    if (dv.logs !== undefined) {
+        for (var j = 0; j < dv.logs.length; j++) {
+            dv.logs[j].k = dk;
+            dv.logs[j].d = dv;
         }
-    }
-    i = (i < units.length ? i : units.length - 1);
 
-    var convertedValue = (value / multiplier).toFixed(decimals);
-    var unit = units[i];
-
-    return {
-        value: convertedValue,
-        unit: unit,
-        output: convertedValue + ' ' + unit
-    };
-}
-
-var colors = d3.scale.category10();
-var lastcolor = 0;
-var cNames = {};
-
-function svColorMono(cname) {
-    if (cNames[cname] === undefined) {
-        cNames[cname] = colors(lastcolor);
-        lastcolor++;
+        Array.prototype.push.apply(loglist, dv.logs);
     }
 
-    return cNames[cname];
+    if (retnow === true) {
+        return;
+    }
+
+    var childs = dv.ch;
+    for (var ch in childs) {
+        svAddChildLogs(loglist, ch, childs[ch]);
+    }
 }
 
-function svDetailClose() {
-    if (svDetailMode !== 'zoom') {
-        svPopoutBox.html('');
-        svPopoutBox.style('opacity', null);
-        svPopoutBox.style('z-index', null);
+function svShowLogs(d) {
+    var loglist = [];
+    var content =
+        '<b>Logs for</b> <a href="javascript:svChildLogsVisibility(false)">this span only</a> - <a href="javascript:svChildLogsVisibility(true)">this span and childs</a>';
+
+    if (svShowChildLogs === false) {
+        svAddChildLogs(loglist, d.data.key, d.data.value, true);
     } else {
-        svFlameGraph.zoomSet({ 'x': 0, 'dx': 1, 'y': 0 });
-    }
-}
-
-function svRenderLegend() {
-    var content = "<b>Container Colors</b>:";
-
-    for (var cName in cNames) {
-        var col = svColorMono(cName);
-        content += '<br><text style="color:' + col + '">' + ' ' + cName + '</text>';
+        svAddChildLogs(loglist, d.data.key, d.data.value);
+        loglist.sort(function (a, b) {
+            if (a.th === b.th) {
+                return a.tl - b.tl;
+            } else {
+                return a.th - b.th;
+            }
+        });
     }
 
-    svLegend.html(content);
+    if (loglist) {
+        for (var j = 0; j < loglist.length; j++) {
+            var logLine = loglist[j].b.toLowerCase();
+            var col;
+
+            //
+            // Determine the log text color
+            //
+            if (logLine.indexOf("err") > -1) {
+                col = '#ff0000';
+            } else if (logLine.indexOf("warn") > -1) {
+                col = '#ff8800';
+            } else {
+                col = '#000000';
+            }
+
+            //
+            // Determine the container color
+            //
+            var cName = loglist[j].d.cont;
+
+            var contCol = '#000000'; // TODO = svColorMono(cName);
+
+            content += '<br>' +
+                '<text style="color:' + contCol + '"> ' + cName + '</text> ' +
+                '<text style="color:' + col + '"> (' + loglist[j].k + ') ' + loglist[j].t + ' ' + loglist[j].b + '</text>';
+        }
+    }
+
+    svLogs.html(content);
+
+    svLastLogsNode = d;
 }
 
 /*
@@ -240,56 +282,6 @@ function svRenderLegend() {
  *         }
  *     }
  */
-function svMakeSubgraphData(d) {
-    /*
-     * First, construct everything from the current node to all of its
-     * leafs.
-     */
-    var tree, oldtree;
-
-    tree = {};
-    tree[d.data.key] = d.data.value;
-
-    while (d.parent !== undefined) {
-        oldtree = tree;
-        tree = {};
-        tree[d.parent.data.key] = {
-            't': d.parent.data.value.t,
-            'svTotal': d.parent.data.value.svTotal,
-            'ch': oldtree
-        };
-        d = d.parent;
-    }
-
-    return (tree);
-}
-
-function svDetailOpen(d) {
-    if (svDetailMode !== 'zoom') {
-        svPopoutBox.html('');
-        /* jsl:ignore */
-        new FlameGraph(svPopoutBox, svMakeSubgraphData(d), null, null,
-            svContext, {
-            'coloring': svColorMode,
-            'growDown': svGrowDown
-            });
-        /* jsl:end */
-        svPopoutBox.style('z-index', 1);
-        svPopoutBox.style('opacity', 1);
-    } else {
-        svFlameGraph.zoomSet(d);
-    }
-}
-
-function svCreateBarLabel(d) {
-    var nconc = d.data.value.nconc;
-
-    if (nconc) {
-        return d.data.key + ' (' + nconc + ')';
-    } else {
-        return d.data.key;
-    }
-}
 
 /*
  * Build a flame graph rooted at the given "node" (a D3 selection) with the
@@ -297,6 +289,16 @@ function svCreateBarLabel(d) {
  * "pheight".  "context" is used for notifications about UI actions.
  */
 function FlameGraph(node, rawdata, pwidth, pheight, context, options) {
+    function svCreateBarLabel(d) {
+        var nconc = d.data.value.nconc;
+
+        if (nconc) {
+            return d.data.key + ' (' + nconc + ')';
+        } else {
+            return d.data.key;
+        }
+    }
+
     var axiswidth, chartheight, rect, scale, nodeid, axis, data;
     var fg = this;
 
@@ -355,7 +357,7 @@ function FlameGraph(node, rawdata, pwidth, pheight, context, options) {
                 return ('#ffffff');
             }
 
-            return (svColorMono(d.data.value.cont));
+            return (options.svColorMono(d.data.value.cont));
         };
     }
 
@@ -486,82 +488,6 @@ FlameGraph.prototype.detailClose = function () {
     }
 };
 
-function svChildLogsVisibility(show) {
-    svShowChildLogs = show;
-    svShowLogs(svLastLogsNode);
-}
-
-function svAddChildLogs(loglist, dk, dv, retnow) {
-    if (dv.logs !== undefined) {
-        for (var j = 0; j < dv.logs.length; j++) {
-            dv.logs[j].k = dk;
-            dv.logs[j].d = dv;
-        }
-
-        Array.prototype.push.apply(loglist, dv.logs);
-    }
-
-    if (retnow === true) {
-        return;
-    }
-
-    var childs = dv.ch;
-    for (var ch in childs) {
-        svAddChildLogs(loglist, ch, childs[ch]);
-    }
-}
-
-function svShowLogs(d) {
-    var loglist = [];
-    var content =
-        '<b>Logs for</b> <a href="javascript:svChildLogsVisibility(false)">this span only</a> - <a href="javascript:svChildLogsVisibility(true)">this span and childs</a>';
-
-    if (svShowChildLogs === false) {
-        svAddChildLogs(loglist, d.data.key, d.data.value, true);
-    } else {
-        svAddChildLogs(loglist, d.data.key, d.data.value);
-        loglist.sort(function (a, b) {
-            if (a.th === b.th) {
-                return a.tl - b.tl;
-            } else {
-                return a.th - b.th;
-            }
-        });
-    }
-
-    if (loglist) {
-        for (var j = 0; j < loglist.length; j++) {
-            var logLine = loglist[j].b.toLowerCase();
-            var col;
-
-            //
-            // Determine the log text color
-            //
-            if (logLine.indexOf("err") > -1) {
-                col = '#ff0000';
-            } else if (logLine.indexOf("warn") > -1) {
-                col = '#ff8800';
-            } else {
-                col = '#000000';
-            }
-
-            //
-            // Determine the container color
-            //
-            var cName = loglist[j].d.cont;
-            var contCol = svColorMono(cName);
-
-            content += '<br>' +
-                '<text style="color:' + contCol + '"> ' + cName + '</text> ' +
-                '<text style="color:' + col + '"> (' + loglist[j].k + ') ' + loglist[j].t + ' ' + loglist[j].b + '</text>';
-        }
-    }
-
-    svLogs.html(content);
-
-    svLastLogsNode = d;
-}
-
 FlameGraph.prototype.showLogs = function (d) {
     svShowLogs(d);
 };
@@ -635,7 +561,6 @@ FlameGraph.prototype.zoomSet = function (cd) {
     this.fg_text.transition().duration(svTransitionTime).
         attr('x', this.fg_x);
 };
-
 
 // /*
 //  * This function is copied directly from lib/color.js.  It would be better if we

@@ -1,14 +1,56 @@
 import Ember from 'ember';
+import fmtTimeInterval from 'flame-ui/helpers/fmtTimeInterval';
 
 export default Ember.Route.extend({
     model() {
-        return {
-            avg: svFillData(avg),
-            min: svFillData(min),
-            max: svFillData(max)
-        };
+        var model = Ember.Object.create({
+            avg:        svFillData(avg),
+            min:        svFillData(min),
+            max:        svFillData(max),
+            selectedOp: 'avg'
+        });
+
+        var nodeIds = Object.keys(model.get('avg')[''].ch);
+        var nodes = nodeIds.map(function(node) {
+            return {
+                node:   node,
+                n:      model.get('avg')[""].ch[node].n,
+                avg:    fmtTimeInterval(model.get('avg')[""].ch[node].tt, 3, 1).output,
+                min:    fmtTimeInterval(model.get('min')[""].ch[node].tt, 3, 1).output,
+                max:    fmtTimeInterval(model.get('max')[""].ch[node].tt, 3, 1).output
+            };
+        });
+
+        model.setProperties({
+            nodes:          nodes,
+            selectedNode:   (nodeIds.length > 0 ? nodeIds[0] : null),
+            flames:         (nodeIds.length > 0 ? model.get(model.get('selectedOp')) : null)
+        });
+
+        return model;
+    },
+
+    actions: {
+        svSwitchData: function(node, view) {
+            var model = this.controller.get('model');
+
+            model.setProperties({
+                selectedNode:   node,
+                selectedOp:     view,
+                flames:         createSubTree(model.get(view), node)
+            });
+        }
     }
 });
+
+function createSubTree(fullTree, trName) {
+    var res = {};
+    res[""] = {};
+    res[""].ch = {};
+    res[""].ch[trName] = fullTree[""].ch[trName];
+
+    return res;
+}
 
 function svFillData(tree) {
     var key, rem;

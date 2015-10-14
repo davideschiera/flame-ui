@@ -1,27 +1,23 @@
-<h1>Sysdig Transaction Flame</h1>
-
-<div id="svTrList" style="float:left">
-    <b>Transactions</b>:
-    <br />
-    {{#each nodes key="@identity" as |node|}}
-        <b>{{node.node}}</b> - {{node.n}} calls -
-        <a {{action "svSwitchData" node.node "avg"}}>Avg Time</a>: {{node.avg}}
-        <a {{action "svSwitchData" node.node "min"}}>Min Time</a>: {{node.min}}
-        <a {{action "svSwitchData" node.node "max"}}>Max Time</a>: {{node.max}}
-        <br />
+<div id="svLegend" style="float:right">
+    <b>Container Colors</b>:
+    {{#each legendItems key="@identity" as |item|}}
+        <br><text style="color:{{item.color}}">{{item.name}}</text>
     {{/each}}
 </div>
-
-<div id="svLegend" style="float:right"></div>
 <div style="clear:both"></div>
+
 <div id="svChartTitle">
-  <h2>Transaction Average</h2>
+  <h2>{{node}} {{op}}</h2>
 </div>
+
 <div id="chart">
   <div style="position: relative">
     <div class="svPopout" id="svPopout"></div>
   </div>
 </div>
+
 <div id="svDetails"> <b>Info</b>:</div>
+
 <br>
+
 <div id="svLogs"></div>

@@ -1,1 +1,12 @@
-{{flame-ui data=model}}
+<h1>Sysdig Transaction Flame</h1>
+
+{{transactions-table
+    nodes =     model.nodes
+    select =    "svSwitchData"
+}}
+
+{{flame-ui
+    node =  model.selectedNode
+    op =    model.selectedOp
+    data =  model.flames
+}}
