@@ -1,11 +1,11 @@
 <div>
     <b>Transactions</b>:
     <br />
-    {{#each nodes key="@identity" as |node|}}
-        <b>{{node.node}}</b> - {{node.n}} calls -
-        <a {{action "select" node.node "avg"}}>Avg Time</a>: {{node.avg}}
-        <a {{action "select" node.node "min"}}>Min Time</a>: {{node.min}}
-        <a {{action "select" node.node "max"}}>Max Time</a>: {{node.max}}
+    {{#each transactions key="@identity" as |transaction|}}
+        <b>{{transaction.node}}</b> - {{transaction.n}} calls -
+        <a {{action "select" transaction.node "avg"}}>Avg Time</a>: {{transaction.avg}}
+        <a {{action "select" transaction.node "min"}}>Min Time</a>: {{transaction.min}}
+        <a {{action "select" transaction.node "max"}}>Max Time</a>: {{transaction.max}}
         <br />
     {{/each}}
 </div>

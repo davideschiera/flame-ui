@@ -1,8 +1,8 @@
 <h1>Sysdig Transaction Flame</h1>
 
 {{transactions-table
-    nodes =     model.nodes
-    select =    "svSwitchData"
+    transactions =  model.transactions
+    select =        "selectTransaction"
 }}
 
 {{#if model.selectedNode}}
@@ -10,7 +10,7 @@
         node =      model.selectedNode
         op =        model.selectedOp
         data =      model.flames
-        select =    "svShowLog"
+        select =    "selectSpan"
     }}
 
     {{#if model.selectedSpan}}

@@ -48,7 +48,7 @@ div.svTooltip {
     pointer-events: none;  
 }
 
-div.svPopout {
+div#svPopout {
     position: absolute;
     border-radius: 2px;
     border: 2px #333333 solid;

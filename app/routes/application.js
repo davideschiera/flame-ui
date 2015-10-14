@@ -3,36 +3,35 @@ import fmtTimeInterval from 'flame-ui/helpers/fmtTimeInterval';
 
 export default Ember.Route.extend({
     model() {
-        var model = Ember.Object.create({
-            avg:            svFillData(avg),
-            min:            svFillData(min),
-            max:            svFillData(max),
+        var data = {
+            avg: svFillData(avg),
+            min: svFillData(min),
+            max: svFillData(max)
+        };
+        var nodeIds = Object.keys(data.avg[''].ch);
+
+        return Ember.Object.create({
+            avg:            data.avg,
+            min:            data.min,
+            max:            data.max,
+            transactions:   nodeIds.map(function(node) {
+                return {
+                    node:   node,
+                    n:      data.avg[""].ch[node].n,
+                    avg:    fmtTimeInterval(data.avg[""].ch[node].tt, 3, 1).output,
+                    min:    fmtTimeInterval(data.min[""].ch[node].tt, 3, 1).output,
+                    max:    fmtTimeInterval(data.max[""].ch[node].tt, 3, 1).output
+                };
+            }),
             selectedOp:     'avg',
             selectedSpan:   null,
-        });
-
-        var nodeIds = Object.keys(model.get('avg')[''].ch);
-        var nodes = nodeIds.map(function(node) {
-            return {
-                node:   node,
-                n:      model.get('avg')[""].ch[node].n,
-                avg:    fmtTimeInterval(model.get('avg')[""].ch[node].tt, 3, 1).output,
-                min:    fmtTimeInterval(model.get('min')[""].ch[node].tt, 3, 1).output,
-                max:    fmtTimeInterval(model.get('max')[""].ch[node].tt, 3, 1).output
-            };
-        });
-
-        model.setProperties({
-            nodes:          nodes,
             selectedNode:   (nodeIds.length > 0 ? nodeIds[0] : null),
-            flames:         (nodeIds.length > 0 ? model.get(model.get('selectedOp')) : null)
+            flames:         (nodeIds.length > 0 ? data.avg : null)
         });
-
-        return model;
     },
 
     actions: {
-        svSwitchData: function(node, view) {
+        selectTransaction: function(node, view) {
             var model = this.controller.get('model');
 
             model.setProperties({
@@ -42,7 +41,7 @@ export default Ember.Route.extend({
             });
         },
 
-        svShowLog: function(d) {
+        selectSpan: function(d) {
             var model = this.controller.get('model');
 
             model.set('selectedSpan', d);

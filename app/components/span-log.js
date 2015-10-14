@@ -89,7 +89,7 @@ export default Ember.Component.extend({
     }),
 
     actions: {
-        svChildLogsVisibility(show) {
+        showChildrenLog(show) {
             this.set('svShowChildLogs', show);
         }
     }
