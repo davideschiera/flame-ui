@@ -3,7 +3,7 @@
 // - These rulesets must be reusable trough the entire application and must most generic possible;
 // - If you need any specific ruleset, extend this component using the specific component's stylesheet;
 
-.s-panel {
+.sd-panel {
     // Variables
     @border-radius:     2px;
     @background-color:  #FFFFFF;
@@ -14,10 +14,22 @@
     display:            block;
     border-radius:      @border-radius;
     background-color:   @background-color;
-    padding:            @padding-m;
     box-shadow:         rgba(0, 0, 0, 0.117647) 0px 1px 3px 0px, rgba(0, 0, 0, 0.117647) 0px 1px 3px 0px;
 
-    @import 'components/s-panel-footer';
-    @import 'components/s-panel-header';
+    // Children selectors
+    .flex-scaffholding {
+        display: flex;
+        &.-row {
+            flex-direction: row;
+        }
+        .flex-grow {
+            flex: 1 0 0;
+        }
+    }
 
+    // Children components
+    @import 'components/sd-panel-footer';
+    @import 'components/sd-panel-header';
+    @import 'components/sd-panel-sidebar';
+    @import 'components/sd-panel-content';
 }

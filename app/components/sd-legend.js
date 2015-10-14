@@ -1,5 +1,6 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    classNames: [ 's-panel-footer' ]
+    tagName:    'ul',
+    classNames: [ 'sd-legend' ]
 });

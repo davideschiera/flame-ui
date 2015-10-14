@@ -1,11 +1,11 @@
 /* global d3 */
 
 import Ember from 'ember';
-import SPanel from '../components/s-panel';
+import SDPanel from '../components/sd-panel';
 import fmtTimeInterval from 'flame-ui/helpers/fmt-time-interval';
 import FlameGraph from 'flame-ui/lib/flame-graph';
 
-export default SPanel.extend({
+export default SDPanel.extend({
     classNames: [ 'flame-ui '],
 
     init() {
@@ -117,7 +117,7 @@ export default SPanel.extend({
 
     renderChart(data) {
         this.set('chart', new FlameGraph(
-            d3.select(`#${this.$().attr('id')} > #chart`),
+            d3.select(`#${this.$().attr('id')} #chart`),
             data,
             null,
             null,
@@ -130,7 +130,7 @@ export default SPanel.extend({
     },
 
     destroyChart() {
-        d3.select(`#${this.$().attr('id')} > #chart`).html("");
+        d3.select(`#${this.$().attr('id')} #chart`).html("");
     },
 
     getNodeColor(containerName) {

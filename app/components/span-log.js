@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import SPanel from '../components/s-panel';
+import SDPanel from '../components/sd-panel';
 
-export default SPanel.extend({
+export default SDPanel.extend({
     classNames: [ 'span-log' ],
 
     init() {

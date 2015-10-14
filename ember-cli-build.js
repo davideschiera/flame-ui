@@ -29,5 +29,12 @@ module.exports = function(defaults) {
     });
     app.import('vendor/roboto/stylesheet.css');
 
-    return app.toTree(robotoAssets);
+    var iconsAssets = new Funnel(app.bowerDirectory + '/material-design-icons-iconfont/dist/fonts', {
+        srcDir: '/',
+        include: ['*.woff', '*.woff2', '*.eot', '*.svg', '*.ttf', ],
+        destDir: '/assets/fonts'
+    });
+    app.import(app.bowerDirectory + '/material-design-icons-iconfont/dist/material-design-icons.css');
+
+    return app.toTree(robotoAssets, iconsAssets);
 };

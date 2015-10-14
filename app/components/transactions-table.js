@@ -1,4 +1,4 @@
-import SPanel from '../components/s-panel';
+import SPanel from '../components/sd-panel';
 
 export default SPanel.extend({
     classNames: [ 'transactions-table' ],

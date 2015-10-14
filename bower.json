@@ -10,6 +10,7 @@
     "ember-resolver": "0.1.21",
     "jquery": "2.1.4",
     "loader.js": "ember-cli/loader.js#3.3.0",
+    "material-design-icons-iconfont": "~2.0.3",
     "reset-css": "~2.0.2011012602"
   },
   "devDependencies": {

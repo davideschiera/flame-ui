@@ -1,12 +1,17 @@
-{{#s-panel-header}}
+{{#sd-panel-header}}
     <h1 class="title">
         Logs for
         <a href="#0" {{action "showChildrenLog" false}}>this span only</a> - <a href="#0" {{action "showChildrenLog" true}}>this span and childs</a>
     </h1>
-{{/s-panel-header}}
+{{/sd-panel-header}}
 
-{{#each lines key="@index" as |line|}}
-    <br>
-    <text style="color:{{line.contCol}}">{{line.containerName}}</text>
-    <text style="color:{{line.col}}">({{line.k}}) {{line.t}} {{line.b}}</text>
-{{/each}}
+{{#sd-panel-content}}
+    <ul>
+        {{#each lines key="@index" as |line|}}
+        <li>
+            <span style="color:{{line.contCol}}">{{line.containerName}}</span>
+            <span style="color:{{line.col}}">({{line.k}}) {{line.t}} {{line.b}}</span>
+        </li>
+        {{/each}}
+    </ul>
+{{/sd-panel-content}}

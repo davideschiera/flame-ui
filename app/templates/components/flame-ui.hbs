@@ -1,24 +1,21 @@
-{{#s-panel-header}}
+{{#sd-panel-header}}
     <h1 class="title">{{node}} {{op}}</h1>
-{{/s-panel-header}}
+{{/sd-panel-header}}
 
-<div style="float:right">
-    <b>Container Colors</b>:
-    {{#each legendItems key="@identity" as |item|}}
-        <br>
-        <text style="color:{{item.color}}">{{item.name}}</text>
-    {{/each}}
-</div>
-<div style="clear:both"></div>
+<div class="flex-scaffholding -row">
+    {{#sd-panel-content class="flex-grow"}}
+        <div id="chart"></div>
+        <div style="position: relative">
+            <div id="svPopout"></div>
+        </div>
+    {{/sd-panel-content}}
 
-<div id="chart">
-</div>
-
-<div style="position: relative">
-    <div id="svPopout"></div>
+    {{#sd-panel-sidebar}}
+        {{sd-legend legendItems=legendItems}}
+    {{/sd-panel-sidebar}}
 </div>
 
-{{#s-panel-footer}}
+{{#sd-panel-footer}}
     {{#if activeSpan}}
         <strong>{{activeSpan.name}} informations –</strong>
         Container Name:                 <b>{{activeSpan.container}}</b>
@@ -31,4 +28,4 @@
             <strong>NOTE: this node has {{activeSpan.childCount}} childs. Only the slowest one is shown.</strong>
         {{/if}}
     {{/if}}&nbsp;
-{{/s-panel-footer}}
+{{/sd-panel-footer}}
