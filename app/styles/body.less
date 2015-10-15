@@ -24,4 +24,14 @@ body { // body
     .sd-panel {
         margin-bottom:  @margin-md;
     }
+
+    // Set panels height to make them fit the viewport
+    @used-page: @top-header-height - @margin-md * 2;
+    .transactions-table,
+    .span-log {
+        height: calc(~"(100vh / 4) - " @used-page);
+    }
+    .flame-ui {
+        height: calc(~"(100vh / 2) - " @used-page);
+    }
 }

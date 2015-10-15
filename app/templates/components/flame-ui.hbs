@@ -1,37 +1,39 @@
-{{#sd-panel-header}}
-    <h1 class="title">{{node}} {{op}}</h1>
-    <div class="separator"></div>
-    <ul class="actions">
-        <li class="item">
-            <button class="button -flat -inline -primary">Hide legend</button>
-        </li>
-    </ul>
-{{/sd-panel-header}}
+<div class="flex-scaffholding -column">
+    {{#sd-panel-header}}
+        <h1 class="title">{{node}} {{op}}</h1>
+        <div class="separator"></div>
+        <ul class="actions">
+            <li class="item">
+                <button class="button -flat -inline -primary">Hide legend</button>
+            </li>
+        </ul>
+    {{/sd-panel-header}}
 
-<div class="flex-scaffholding -row">
-    {{#sd-panel-content class="flex-grow"}}
-        <div id="chart"></div>
-        <div style="position: relative">
-            <div id="svPopout"></div>
-        </div>
-    {{/sd-panel-content}}
+    <div class="flex-scaffholding -row flex-grow">
+        {{#sd-panel-content class="flex-grow -overflow-visible"}}
+            <div id="chart"></div>
+            <div style="position: relative">
+                <div id="svPopout"></div>
+            </div>
+        {{/sd-panel-content}}
 
-    {{#sd-panel-sidebar}}
-        {{sd-legend legendItems=legendItems}}
-    {{/sd-panel-sidebar}}
-</div>
+        {{#sd-panel-sidebar}}
+            {{sd-legend legendItems=legendItems}}
+        {{/sd-panel-sidebar}}
+    </div>
 
-{{#sd-panel-footer}}
-    {{#if activeSpan}}
-        <strong>{{activeSpan.name}} informations –</strong>
-        Container Name:                 <b>{{activeSpan.container}}</b>
-        Command Line:                   <b>{{activeSpan.container}}</b>
-        Time in this node and childs:   <b>{{activeSpan.container}}</b>
-        Time in this node:              <b>{{activeSpan.timeInNode}}</b>
+    {{#sd-panel-footer}}
+        {{#if activeSpan}}
+            <strong>{{activeSpan.name}} informations –</strong>
+            Container Name:                 <b>{{activeSpan.container}}</b>
+            Command Line:                   <b>{{activeSpan.container}}</b>
+            Time in this node and childs:   <b>{{activeSpan.container}}</b>
+            Time in this node:              <b>{{activeSpan.timeInNode}}</b>
 
-        {{#if activeSpan.childCount}}
-            <br>
-            <strong>NOTE: this node has {{activeSpan.childCount}} childs. Only the slowest one is shown.</strong>
+            {{#if activeSpan.childCount}}
+                <br>
+                <strong>NOTE: this node has {{activeSpan.childCount}} childs. Only the slowest one is shown.</strong>
+            {{/if}}
         {{/if}}
-    {{/if}}
-{{/sd-panel-footer}}
+    {{/sd-panel-footer}}
+</div>

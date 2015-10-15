@@ -1,3 +1,15 @@
 .sd-panel-content {
-    padding: @padding-md;
+    padding:  @padding-md;
+
+    // By default, set overflow auto to add scrollbars if content is too high
+    // if you prefer a different behavior use the -overflow-x modifier
+    overflow: auto;
+    &.-overflow {
+        &-visible {
+            overflow: visible;
+        }
+        &-hidden {
+            overflow: hidden;
+        }
+    }
 }

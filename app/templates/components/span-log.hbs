@@ -1,17 +1,19 @@
-{{#sd-panel-header}}
-    <h1 class="title">
-        Logs for
-        <a href="#0" {{action "showChildrenLog" false}}>this span only</a> - <a href="#0" {{action "showChildrenLog" true}}>this span and childs</a>
-    </h1>
-{{/sd-panel-header}}
+<div class="flex-scaffholding -column">
+    {{#sd-panel-header}}
+        <h1 class="title">
+            Logs for
+            <a href="#0" {{action "showChildrenLog" false}}>this span only</a> - <a href="#0" {{action "showChildrenLog" true}}>this span and childs</a>
+        </h1>
+    {{/sd-panel-header}}
 
-{{#sd-panel-content}}
-    <ul>
-        {{#each lines key="@index" as |line|}}
-        <li>
-            <span style="color:{{line.contCol}}">{{line.containerName}}</span>
-            <span style="color:{{line.col}}">({{line.k}}) {{line.t}} {{line.b}}</span>
-        </li>
-        {{/each}}
-    </ul>
-{{/sd-panel-content}}
+    {{#sd-panel-content class="flex-grow"}}
+        <ul>
+            {{#each lines key="@index" as |line|}}
+            <li>
+                <span style="color:{{line.contCol}}">{{line.containerName}}</span>
+                <span style="color:{{line.col}}">({{line.k}}) {{line.t}} {{line.b}}</span>
+            </li>
+            {{/each}}
+        </ul>
+    {{/sd-panel-content}}
+</div>
