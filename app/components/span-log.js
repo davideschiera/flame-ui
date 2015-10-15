@@ -2,6 +2,8 @@ import Ember from 'ember';
 import SDPanel from '../components/sd-panel';
 
 export default SDPanel.extend({
+    colorStore: Ember.inject.service('color-store'),
+
     classNames: [ 'span-log' ],
 
     init() {
@@ -76,7 +78,7 @@ export default SDPanel.extend({
             //
             var containerName = loglist[j].d.cont;
 
-            var contCol = '#000000'; // TODO = getNodeColor(containerName);
+            var contCol = this.get('colorStore').assignColor(containerName);
 
             lines[j] = {
                 contCol:    contCol,

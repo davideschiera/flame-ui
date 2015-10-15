@@ -6,6 +6,8 @@ import fmtTimeInterval from 'flame-ui/helpers/fmt-time-interval';
 import FlameGraph from 'flame-ui/lib/flame-graph';
 
 export default SDPanel.extend({
+    colorStore: Ember.inject.service('color-store'),
+
     classNames: [ 'flame-ui '],
 
     init() {
@@ -28,10 +30,6 @@ export default SDPanel.extend({
     setInitialState() {
         var me = this;
         me.setProperties({
-            colors:             d3.scale.category10(),
-            lastColorIndex:     0,
-            containerNames:     {},
-            containerNameList:  [],
             chart:              null,
             activeSpan:         null,
             detailMode:         'popout',
@@ -134,23 +132,38 @@ export default SDPanel.extend({
     },
 
     getNodeColor(containerName) {
-        var containerNames = this.get('containerNames');
-        var color = containerNames[containerName];
-        if (color === undefined) {
-            color = this.get('colors')(this.get('lastColorIndex'));
-            containerNames[containerName] = color;
-            this.get('containerNameList').pushObject(containerName);
-            this.incrementProperty('lastColorIndex');
-        }
-
-        return color;
+        return this.get('colorStore').assignColor(containerName);
     },
 
-    legendItems: Ember.computed('containerNameList.[]', function() {
+    containerNameList: Ember.computed('data', function() {
+        function recursion(ch) {
+            var keys = Object.keys(ch);
+            var i, iz;
+            for (i = 0, iz = keys.length; i < iz; i++) {
+                if (map[keys[i]] === undefined) {
+                    map[keys[i]] = true;
+                    list.push(keys[i]);
+                }
+
+                if (keys[i].ch) {
+                    recursion(keys[i].ch);
+                }
+            }
+        }
+
+        var list = [];
+        var map = {};
+
+        recursion(this.get('data')[''].ch);
+
+        return list;
+    }),
+
+    legendItems: Ember.computed('containerNameList', function() {
         return this.get('containerNameList').map(function(containerName) {
             return {
                 name:   containerName,
-                color:  this.getNodeColor(containerName)
+                color:  this.get('colorStore').assignColor(containerName)
             };
         }, this);
     })
