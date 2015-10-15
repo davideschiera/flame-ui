@@ -11,13 +11,15 @@
     @separator:         1px solid #D9D9D9;
 
     // Rulesets
-    display:            block;
+    display:            flex;
+    flex-direction:     column;
     border-radius:      @border-radius;
     background-color:   @background-color;
     .shadow-z-1;
 
     // Children selectors
     .flex-scaffholding {
+        flex:    1 0 0;
         display: flex;
         height:  100%;
         &.-row {

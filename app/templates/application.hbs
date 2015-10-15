@@ -1,21 +1,23 @@
-{{sd-header class="-fixed"}}
+<div class="sd-app-container">
+    {{sd-header class="-fixed"}}
 
-{{transactions-table
-    transactions =  model.transactions
-    select       =  "selectTransaction"
-}}
-
-{{#if model.selectedNode}}
-    {{flame-ui
-        node    = model.selectedNode
-        op      = model.selectedOp
-        data    = model.flames
-        select  = "selectSpan"
+    {{transactions-table
+        transactions =  model.transactions
+        select       =  "selectTransaction"
     }}
 
-    {{#if model.selectedSpan}}
-        {{span-log
-            span =  model.selectedSpan
+    {{#if model.selectedNode}}
+        {{flame-ui
+            node    = model.selectedNode
+            op      = model.selectedOp
+            data    = model.flames
+            select  = "selectSpan"
         }}
+
+        {{#if model.selectedSpan}}
+            {{span-log
+                span =  model.selectedSpan
+            }}
+        {{/if}}
     {{/if}}
-{{/if}}
+</div>

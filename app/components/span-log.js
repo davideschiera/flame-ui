@@ -4,7 +4,7 @@ import SDPanel from '../components/sd-panel';
 export default SDPanel.extend({
     colorStore: Ember.inject.service('color-store'),
 
-    classNames: [ 'span-log' ],
+    classNames: [ 'span-log', 'row-1' ],
 
     init() {
         this._super();
