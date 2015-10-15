@@ -4,7 +4,7 @@
         <div class="separator"></div>
         <ul class="actions">
             <li class="item">
-                <button class="button -flat -inline -primary">Hide legend</button>
+                <button {{action "toggleLegend"}} class="button -flat -inline -primary">Toggle legend</button>
             </li>
         </ul>
     {{/sd-panel-header}}
@@ -17,7 +17,7 @@
             </div>
         {{/sd-panel-content}}
 
-        {{#sd-panel-sidebar}}
+        {{#sd-panel-sidebar collapsed=isLegendCollapsed}}
             {{sd-legend legendItems=legendItems}}
         {{/sd-panel-sidebar}}
     </div>

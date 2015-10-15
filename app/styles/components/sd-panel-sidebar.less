@@ -1,5 +1,18 @@
 .sd-panel-sidebar {
+    // Rulesets
     border-left:    @separator;
     padding:        @padding-md;
     margin-left:    @margin-md;
+    transition:     all 0.2s linear;
+    max-width:      200px;
+    overflow:       hidden;
+
+    // Modifiers
+    &.-collapsed {
+        max-width:      0;
+        overflow:       hidden;
+        padding:        @padding-md 0;
+        margin-left:    0;
+        margin-right:    -1px
+    }
 }

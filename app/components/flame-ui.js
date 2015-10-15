@@ -10,6 +10,8 @@ export default SDPanel.extend({
 
     classNames: [ 'flame-ui', 'row-2'],
 
+    isLegendCollapsed: false,
+
     init() {
         this._super();
 
@@ -166,5 +168,11 @@ export default SDPanel.extend({
                 color:  this.get('colorStore').assignColor(containerName)
             };
         }, this);
-    })
+    }),
+
+    actions: {
+        toggleLegend() {
+            this.toggleProperty('isLegendCollapsed');
+        }
+    }
 });

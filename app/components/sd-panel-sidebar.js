@@ -1,5 +1,6 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    classNames: [ 'sd-panel-sidebar' ]
+    classNames:        [ 'sd-panel-sidebar' ],
+    classNameBindings: [ 'collapsed:-collapsed' ]
 });
