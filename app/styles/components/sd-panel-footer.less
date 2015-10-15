@@ -4,4 +4,12 @@
     border-radius:      @border-radius @border-radius 0 0;
     padding:            @padding-m;
     border-top:         @separator;
+
+    // Always append a white-space to keep the height of the footer consistent
+    // this solution doesn't take in account cases where the footer text takes more than a single line
+    &:after {
+        content: "\00a0";
+        display: inline-block;
+        width: 0;
+    }
 }
