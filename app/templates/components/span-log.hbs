@@ -2,7 +2,14 @@
     {{#sd-panel-header}}
         <h1 class="title">
             Logs for
-            <a href="#0" {{action "showChildrenLog" false}}>this span only</a> - <a href="#0" {{action "showChildrenLog" true}}>this span and childs</a>
+            {{#sd-tabs-list}}
+                {{#sd-tab-item}}
+                    <a href="#0" {{action "showChildrenLog" false}}>this span only</a>
+                {{/sd-tab-item}}
+                {{#sd-tab-item}}
+                    <a href="#0" {{action "showChildrenLog" true}}>this span and childs</a>
+                {{/sd-tab-item}}
+            {{/sd-tabs-list}}
         </h1>
     {{/sd-panel-header}}
 

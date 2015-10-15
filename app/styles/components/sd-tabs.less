@@ -1,0 +1,26 @@
+.sd-tabs-list {
+    display: inline;
+    font-size: 0;
+
+    .sd-tab-item {
+        display:         inline-block;
+        line-height:     calc(~"1em + " @margin-md * 2);
+        margin:          -@margin-md 0;
+        padding:         0 @padding-md;
+        font-size:       @size-title;
+        &.-active {
+            color:               @color-accent;
+            box-shadow:          0 1px 0 0 @color-accent;
+            background-image:    linear-gradient(@color-accent, @color-accent);
+            background-size:     1px 2px;
+            background-position: bottom;
+            background-repeat:   repeat-x;
+        }
+
+        // Children selectors
+        a {
+            color:           inherit;
+            text-decoration: none;
+        }
+    }
+}
