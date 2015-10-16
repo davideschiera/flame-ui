@@ -2,8 +2,9 @@
     {{sd-header class="-fixed"}}
 
     {{transactions-table
-        transactions =  model.transactions
-        select       =  "selectTransaction"
+        transactions = model.transactions
+        select       = "selectTransaction"
+        class        = "row-1"
     }}
 
     {{#if model.selectedNode}}
@@ -12,11 +13,13 @@
             op      = model.selectedOp
             data    = model.flames
             select  = "selectSpan"
+            class   = "row-2"
         }}
 
         {{#if model.selectedSpan}}
             {{span-log
-                span =  model.selectedSpan
+                span  = model.selectedSpan
+                class = "row-1"
             }}
         {{/if}}
     {{/if}}

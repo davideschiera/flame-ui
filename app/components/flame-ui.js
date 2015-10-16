@@ -8,7 +8,7 @@ import FlameGraph from 'flame-ui/lib/flame-graph';
 export default SDPanel.extend({
     colorStore: Ember.inject.service('color-store'),
 
-    classNames: [ 'flame-ui', 'row-2'],
+    classNames: [ 'flame-ui' ],
 
     isLegendExpanded: true,
     isLegendCollapsed: Ember.computed.not('isLegendExpanded'),
