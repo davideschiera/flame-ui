@@ -2,13 +2,25 @@
     <h1 class="title">Transactions</h1>
 {{/sd-panel-header}}
 
-{{#sd-panel-content}}
-    {{#each transactions key="@identity" as |transaction|}}
-        <div class="row">
-            <b>{{transaction.node}}</b> - {{transaction.n}} calls -
-            <a {{action "select" transaction.node "avg"}}>Avg Time</a>: {{transaction.avg}}
-            <a {{action "select" transaction.node "min"}}>Min Time</a>: {{transaction.min}}
-            <a {{action "select" transaction.node "max"}}>Max Time</a>: {{transaction.max}}
-        </div>
-    {{/each}}
+{{#sd-panel-content class="-no-padding"}}
+    <table class="table">
+        <thead class="thead">
+            <th class="th -string">Node</th>
+            <th class="th -number">Calls</th>
+            <th class="th -number">Avg Time</th>
+            <th class="th -number">Min Time</th>
+            <th class="th -number">Max Time</th>
+        </thead>
+        <tbody class="tbody">
+            {{#each transactions key="@identity" as |transaction|}}
+                <tr class="tr">
+                    <td class="td -string">{{transaction.node}}</td>
+                    <td class="td -number">{{transaction.n}} calls</td>
+                    <td class="td -number"><a href="#0" {{action "select" transaction.node "avg"}}>{{transaction.avg}}</a></td>
+                    <td class="td -number"><a href="#0" {{action "select" transaction.node "min"}}>{{transaction.min}}</a></td>
+                    <td class="td -number"><a href="#0" {{action "select" transaction.node "max"}}>{{transaction.max}}</a></td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
 {{/sd-panel-content}}

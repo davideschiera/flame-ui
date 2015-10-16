@@ -1,0 +1,40 @@
+.table {
+    // Rulesets
+    width:        100%;
+    text-align:   left;
+    table-layout: fixed;
+
+    // Children selectors
+    .th, .td {
+        padding: @padding-md;
+        border-bottom: 1px solid #D9D9D9;
+        vertical-align: middle;
+        &.-number {
+            text-align: right;
+        }
+        &.-icon {
+            width: 2em;
+            text-align: center;
+            font-size: @icon-sm;
+            * {
+                vertical-align: middle;
+            }
+        }
+    }
+    .thead {
+        font-weight: @semibold;
+        color:       @black-light;
+        .th {
+        }
+    }
+    .tbody {
+        .tr {
+            .td {
+
+            }
+            &:last-of-type .td {
+                border-color: transparent;
+            }
+        }
+    }
+}

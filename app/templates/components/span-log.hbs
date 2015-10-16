@@ -13,14 +13,26 @@
         </h1>
     {{/sd-panel-header}}
 
-    {{#sd-panel-content class="flex-grow"}}
-        <ul>
-            {{#each lines key="@index" as |line|}}
-            <li>
-                <span style="color:{{line.contCol}}">{{line.containerName}}</span>
-                <span style="color:{{line.col}}">({{line.k}}) {{line.t}} {{line.b}}</span>
-            </li>
-            {{/each}}
-        </ul>
+    {{#sd-panel-content class="flex-grow -no-padding"}}
+            <table class="table">
+                <thead class="thead">
+                    <th class="th -icon"></th>
+                    <th class="th -string">Container Name</th>
+                    <th class="th -string">K</th>
+                    <th class="th -number">Date and Time</th>
+                    <th class="th -string" colspan="3">Message</th>
+                </thead>
+                <tbody class="tbody">
+                    {{#each lines key="@index" as |line|}}
+                        <tr class="tr" style="color:{{line.col}}">
+                            <td class="td -icon"><i class="material-icons" style="color:{{line.contCol}}">lens</i></td>
+                            <td class="td -string">{{line.containerName}}</td>
+                            <td class="td -string">{{line.k}}</td>
+                            <td class="td -number">{{line.t}}</td>
+                            <td class="td -string" colspan="3">{{line.b}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
     {{/sd-panel-content}}
 </div>
