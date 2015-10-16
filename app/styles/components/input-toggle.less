@@ -1,0 +1,122 @@
+// Small component to show a Material Design style input toggle
+
+// mixin used to generate the declarations which define colors
+.colorInputToggle(
+    @unchecked-handle-bg: #F1F1F1;
+    @checked-handle-bg:   @color-accent;
+    @disabled-handle-bg:  #BDBDBD;
+    @unchecked-toggle-bg: #848484;
+    @disabled-toggle-bg:  #D5D5D5;
+) {
+    @checked-toggle-bg:   fade(@checked-handle-bg, 50%);
+
+    > span {
+        background-image: linear-gradient(to right, @unchecked-toggle-bg 50%, @checked-toggle-bg 50%);
+    }
+    > span:after {
+        background: @unchecked-handle-bg;
+    }
+    > input:checked + span:after {
+        background-color: @checked-handle-bg;
+    }
+    > input:disabled  + span,
+    > input:read-only + span {
+        background:     @disabled-toggle-bg;
+    }
+    > input:disabled  + span:after,
+    > input:read-only + span:after{
+        background:     @disabled-handle-bg;
+    }
+}
+
+label.input-toggle {
+
+    @toggle-w:    36px;
+    @toggle-h:    14px;
+    @handle-size: 20px;
+
+    line-height:  0;
+    font-size:    0;
+
+    > span {
+        display:             inline-block;
+        position:            relative;
+        background-size:     @toggle-w*2 @toggle-h;
+        background-position: 0%;
+        border-radius:       @toggle-w;
+        width:               @toggle-w;
+        height:              @toggle-h;
+        cursor:              pointer;
+        transition:          background-position 0.2s ease-in;
+    }
+    > input:checked + span {
+        background-position: -100%;
+    }
+    > span:after {
+        content:        "";
+        display:        block;
+        position:       absolute;
+        width:          @handle-size;
+        height:         @handle-size;
+        align-self:     center;
+        top:            50%;
+        left:           0;
+        transform:      translateY(-50%);
+        border-radius:  100%;
+        box-shadow:     0 1px 3px rgba(0, 0, 0, 0.5);
+        transition:     left 0.2s ease-in, background-color 0.2s ease-in, transform 0.3s ease;
+    }
+    > input:checked + span:after {
+        left: calc(~"100% - " @handle-size);
+    }
+
+    // Jelly effect on click
+    > span:active:after {
+        transform:      translateY(-50%) scale3d(1.15, 0.85, 1);
+    }
+
+    // No jelly effect on disabled/read-only toggles
+    > input:read-only + span:active:after,
+    > input:disabled  + span:active:after {
+        transform:      translateY(-50%);
+    }
+
+    > input:disabled  + span,
+    > input:read-only + span {
+        cursor:         default;
+    }
+
+    // Hide original checkbox, but don't use `display: none` to allow focus on it using keyboard
+    > input {
+        display:   block;
+        position:  absolute;
+        opacity:   0;
+        width:     0;
+        height:    0;
+    }
+
+    &.-inverted {
+        transform: rotate(180deg);
+        > span:after {
+            box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.5);
+        }
+    }
+    .colorInputToggle; // call it with default arguments to assign the default colors
+}
+
+// Use this wrapper to add labels near the input toggle
+// usage: <label class="toggle-label"><span>Pre</span>{{input-toggle}}<span>Post</span></label>
+.toggle-label {
+    display:      inline-flex;
+    align-items:  center;
+    > .-left  {
+        padding-right: 0.5em;
+    }
+    > .-right {
+        padding-left: 0.5em;
+    }
+    ~ .toggle-label {
+        margin-left: 2em;
+    }
+}
+

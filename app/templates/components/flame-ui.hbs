@@ -4,7 +4,10 @@
         <div class="separator"></div>
         <ul class="actions">
             <li class="item">
-                <button {{action "toggleLegend"}} class="button -flat -inline -primary">Toggle legend</button>
+                <label class="toggle-label">
+                    <span class="-left">Toggle legend</span>
+                    {{input-toggle class="-inverted" checked=isLegendExpanded}}
+                </label>
             </li>
         </ul>
     {{/sd-panel-header}}
