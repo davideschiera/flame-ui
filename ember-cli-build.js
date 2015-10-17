@@ -22,19 +22,19 @@ module.exports = function(defaults) {
     app.import(app.bowerDirectory + '/reset-css/reset.css');
 
     // Copy Roboto webfont:
-    var robotoAssets = new Funnel('vendor/roboto', {
+    var robotoFontAsset = new Funnel('vendor/roboto', {
         srcDir: '/',
-        include: ['*.woff', '*.woff2', '*.eot', '*.svg', '*.ttf', ],
+        include: ['*.woff', '*.woff2', '*.eot', '*.svg', '*.ttf'],
         destDir: '/assets/fonts'
     });
     app.import('vendor/roboto/stylesheet.css');
 
-    var iconsAssets = new Funnel(app.bowerDirectory + '/material-design-icons-iconfont/dist/fonts', {
+    var materialIconsAsset = new Funnel(app.bowerDirectory + '/material-design-icons-iconfont/dist/fonts', {
         srcDir: '/',
-        include: ['*.woff', '*.woff2', '*.eot', '*.svg', '*.ttf', ],
+        include: ['*.woff', '*.woff2', '*.eot', '*.ttf'],
         destDir: '/assets/fonts'
     });
     app.import(app.bowerDirectory + '/material-design-icons-iconfont/dist/material-design-icons.css');
 
-    return app.toTree(robotoAssets, iconsAssets);
+    return app.toTree([robotoFontAsset, materialIconsAsset]);
 };
