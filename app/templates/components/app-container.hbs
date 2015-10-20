@@ -1,0 +1,27 @@
+{{sd-header class="-fixed"}}
+
+{{transactions-table
+    transactions = transactions
+    select       = "selectTransaction"
+    class        = "row-1"
+}}
+
+{{#if transaction}}
+    {{flame-ui
+        node    = transaction
+        op      = aggregation
+        data    = transactionData
+        select  = "selectSpan"
+        class   = "row-2"
+    }}
+
+    {{#if span}}
+        {{span-log
+            span = span
+            spanMode  = spanMode
+            log = spanLog
+            selectMode  = "selectSpanMode"
+            class = "row-1"
+        }}
+    {{/if}}
+{{/if}}

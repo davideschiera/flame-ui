@@ -13,7 +13,7 @@
         </thead>
         <tbody class="tbody">
             {{#each transactions key="@identity" as |transaction|}}
-                <tr class="tr">
+                <tr class="tr" {{action "select" transaction.node}}>
                     <td class="td -string">{{transaction.node}}</td>
                     <td class="td -number">{{transaction.n}} calls</td>
                     <td class="td -number"><a href="#0" {{action "select" transaction.node "avg"}}>{{transaction.avg}}</a></td>

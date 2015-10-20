@@ -5,6 +5,10 @@ import SDPanel from '../components/sd-panel';
 import fmtTimeInterval from 'flame-ui/helpers/fmt-time-interval';
 import FlameGraph from 'flame-ui/lib/flame-graph';
 
+var get = Ember.get;
+var set = Ember.set;
+var setProperties = Ember.setProperties;
+
 export default SDPanel.extend({
     colorStore: Ember.inject.service('color-store'),
 
@@ -16,35 +20,20 @@ export default SDPanel.extend({
     init() {
         this._super();
 
-        this.setInitialState();
-    },
-
-    didInsertElement() {
-        this.renderChart(this.attrs.data.value, this.attrs.node.value);
-    },
-
-    didUpdateAttrs(args) {
-        this.setInitialState();
-
-        this.destroyChart();
-        this.renderChart(args.newAttrs.data.value, args.newAttrs.node.value);
-    },
-
-    setInitialState() {
         var me = this;
-        me.setProperties({
-            chart:              null,
-            activeSpan:         null,
-            detailMode:         'popout',
-            chartContext:       {
+        setProperties(me, {
+            activeSpan:     null,
+            chart:          null,
+            detailMode:     'popout',
+            chartContext:   {
                 detailClose: function() {
                     var svPopoutBox = d3.select(`#${me.$().attr('id')} #svPopout`);
-                    if (me.get('detailMode') !== 'zoom') {
+                    if (get(me, 'detailMode') !== 'zoom') {
                         svPopoutBox.html('');
                         svPopoutBox.style('opacity', null);
                         svPopoutBox.style('z-index', null);
                     } else {
-                        me.get('chart').zoomSet({ 'x': 0, 'dx': 1, 'y': 0 });
+                        get(me, 'chart').zoomSet({ 'x': 0, 'dx': 1, 'y': 0 });
                     }
                 },
                 detailOpen: function svDetailOpen(d) {
@@ -73,31 +62,31 @@ export default SDPanel.extend({
                     }
 
                     var svPopoutBox = d3.select(`#${me.$().attr('id')} #svPopout`);
-                    if (me.get('detailMode') !== 'zoom') {
+                    if (get(me, 'detailMode') !== 'zoom') {
                         svPopoutBox.html('');
                         new FlameGraph(
                             svPopoutBox,
                             svMakeSubgraphData(d),
                             null,
                             null,
-                            me.get('chartContext'),
+                            get(me, 'chartContext'),
                             {
-                                getNodeColor:   me.getNodeColor.bind(me)
+                                getNodeColor: me.getNodeColor.bind(me)
                             });
                         svPopoutBox.style('z-index', 1);
                         svPopoutBox.style('opacity', 1);
                     } else {
-                        me.get('chart').zoomSet(d);
+                        get(me, 'chart').zoomSet(d);
                     }
                 },
                 mouseout: function () {
                     Ember.run(function() {
-                        me.set('activeSpan', null);
+                        set(me, 'activeSpan', null);
                     });
                 },
                 mouseover: function (d, det) {
                     Ember.run(function() {
-                        me.set('activeSpan', {
+                        set(me, 'activeSpan', {
                             name:           det.label,
                             container:      d.data.value.cont,
                             commandLine:    d.data.value.exe,
@@ -116,13 +105,30 @@ export default SDPanel.extend({
         });
     },
 
+    didInsertElement() {
+        if (this.attrs.data.value) {
+            this.renderChart(this.attrs.data.value, this.attrs.node.value);
+        }
+    },
+
+    didUpdateAttrs(args) {
+        set(this, 'activeSpan', null);
+
+        if (args.newAttrs.data.value !== args.oldAttrs.data.value) {
+            this.destroyChart();
+            if (args.newAttrs.data.value) {
+                this.renderChart(args.newAttrs.data.value, args.newAttrs.node.value);
+            }
+        }
+    },
+
     renderChart(data) {
-        this.set('chart', new FlameGraph(
+        set(this, 'chart', new FlameGraph(
             d3.select(`#${this.$().attr('id')} #chart`),
             data,
             null,
             null,
-            this.get('chartContext'),
+            get(this, 'chartContext'),
             {
                 axisLabels:     true,
                 getNodeColor:   this.getNodeColor.bind(this)
@@ -135,7 +141,7 @@ export default SDPanel.extend({
     },
 
     getNodeColor(containerName) {
-        return this.get('colorStore').assignColor(containerName);
+        return get(this, 'colorStore').assignColor(containerName);
     },
 
     containerNameList: Ember.computed('data', function() {
@@ -143,13 +149,13 @@ export default SDPanel.extend({
             var keys = Object.keys(ch);
             var i, iz;
             for (i = 0, iz = keys.length; i < iz; i++) {
-                if (map[keys[i]] === undefined) {
-                    map[keys[i]] = true;
-                    list.push(keys[i]);
+                if (ch[keys[i]].cont && map[ch[keys[i]].cont] === undefined) {
+                    map[ch[keys[i]].cont] = true;
+                    list.push(ch[keys[i]].cont);
                 }
 
-                if (keys[i].ch) {
-                    recursion(keys[i].ch);
+                if (ch[keys[i]].cont && ch[keys[i]].ch) {
+                    recursion(ch[keys[i]].ch);
                 }
             }
         }
@@ -157,16 +163,18 @@ export default SDPanel.extend({
         var list = [];
         var map = {};
 
-        recursion(this.get('data')[''].ch);
+        if (this.attrs.data.value) {
+            recursion(this.attrs.data.value[''].ch);
+        }
 
         return list;
     }),
 
     legendItems: Ember.computed('containerNameList', function() {
-        return this.get('containerNameList').map(function(containerName) {
+        return get(this, 'containerNameList').map(function(containerName) {
             return {
                 name:   containerName,
-                color:  this.get('colorStore').assignColor(containerName)
+                color:  get(this, 'colorStore').assignColor(containerName)
             };
         }, this);
     })
