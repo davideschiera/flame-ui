@@ -16,8 +16,9 @@ export default Ember.Component.extend({
             transaction:        null,
             aggregation:        null,
             transactionData:    null,
-            spanLog:            null,
-            spanMode:           null
+            span:               null,
+            spanMode:           null,
+            spanLog:            null
         });
     },
 
