@@ -2,14 +2,6 @@
     {{#sd-panel-header}}
         <h1 class="title">{{node}} {{op}}</h1>
         <div class="separator"></div>
-        <ul class="actions">
-            <li class="item">
-                <label class="toggle-label">
-                    <span class="-left">Toggle legend</span>
-                    {{input-toggle class="-inverted" checked=isLegendExpanded}}
-                </label>
-            </li>
-        </ul>
     {{/sd-panel-header}}
 
     <div class="flex-scaffholding -row flex-grow">
@@ -20,7 +12,7 @@
             </div>
         {{/sd-panel-content}}
 
-        {{#sd-panel-sidebar collapsed=isLegendCollapsed}}
+        {{#sd-panel-sidebar}}
             {{sd-legend legendItems=legendItems}}
         {{/sd-panel-sidebar}}
     </div>

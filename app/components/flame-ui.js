@@ -14,9 +14,6 @@ export default SDPanel.extend({
 
     classNames: [ 'flame-ui' ],
 
-    isLegendExpanded: true,
-    isLegendCollapsed: Ember.computed.not('isLegendExpanded'),
-
     init() {
         this._super();
 
