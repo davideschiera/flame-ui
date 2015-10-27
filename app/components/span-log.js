@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import SDPanel from '../components/sd-panel';
 
 export default SDPanel.extend({
