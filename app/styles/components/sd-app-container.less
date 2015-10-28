@@ -3,10 +3,13 @@
     flex-direction: column;
     width:          100%;
     height:         calc(~"100vh - " @margin-md);
-    .row-1 {
-        flex: 1;
+
+    .rows (@i) when (@i > 0) {
+      .row-@{i} {
+        flex: @i;
+      }
+      .rows(@i - 1);
     }
-    .row-2 {
-        flex: 2;
-    }
+    .rows(3);
+
 }

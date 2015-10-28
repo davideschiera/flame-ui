@@ -22,6 +22,10 @@ export default Ember.Component.extend({
         });
     },
 
+    chartPanelSize: Ember.computed('span', function() {
+        return (this.get('span')) ? 'row-2' : 'row-3';
+    }),
+
     actions: {
         selectTransaction: function(transaction, aggregation) {
             var me = this;
