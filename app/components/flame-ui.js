@@ -14,6 +14,28 @@ export default SDPanel.extend({
 
     classNames: [ 'flame-ui' ],
 
+    aggregationTypes: Ember.A([
+        {
+            value: 'min',
+            name:  'Minimum'
+        },
+        {
+            value: 'avg',
+            name:  'Average'
+        },
+        {
+            value: 'max',
+            name:  'Maximum'
+        }
+    ]),
+
+    opLabel: Ember.computed('op', function() {
+        var op = this.get('op');
+        return this.get('aggregationTypes').filter(function(option) {
+            return option.value === op;
+        })[0].name;
+    }),
+
     init() {
         this._super();
 
@@ -174,5 +196,13 @@ export default SDPanel.extend({
                 color:  get(this, 'colorStore').assignColor(containerName)
             };
         }, this);
-    })
+    }),
+
+    actions: {
+        changeAggregation(value) {
+
+            console.log(value);
+            this.sendAction('changeAggregation', value);
+        }
+    }
 });

@@ -1,0 +1,20 @@
+{{#sd-dropdown-trigger
+    class           = buttonClasses
+    toggleDropdown  = "toggleDropdown"
+    setupHeight     = "setupHeight"
+}}
+    {{label}}
+{{/sd-dropdown-trigger}}
+
+<div class="sd-dropdown">
+    <ul class="list">
+        {{#each items as |item|}}
+            {{sd-dropdown-item
+                item              = item
+                selectedOption    = selectedOption
+                selectOption      = "selectOption"
+                setDropdownStatus = "setDropdownStatus"
+        }}
+        {{/each}}
+    </ul>
+</div>

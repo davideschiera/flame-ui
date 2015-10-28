@@ -1,7 +1,16 @@
 <div class="flex-scaffholding -column">
     {{#sd-panel-header}}
         <h1 class="title">{{node}} {{op}}</h1>
-        <div class="separator"></div>
+        <div class="spacer"></div>
+        <label>Aggregation:</label>
+        {{sd-dropdown
+            action            = "changeAggregation"
+            changeAggregation = "changeAggregation"
+            items             = aggregationTypes
+            selectedOption    = op
+            label             = opLabel
+            buttonClasses     = "button -flat -primary -inline"
+        }}
     {{/sd-panel-header}}
 
     <div class="flex-scaffholding -row flex-grow">

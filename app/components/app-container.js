@@ -45,15 +45,19 @@ export default Ember.Component.extend({
                         transactionData:    result
                     });
                 });
-                defer.resolve();
+                if (defer) { defer.resolve(); }
             } else {
                 setProperties(me, {
                     transaction:        null,
                     transactionData:    null,
                     span:               null
                 });
-                defer.reject();
+                if (defer) { defer.reject(); }
             }
+        },
+
+        changeAggregation(aggregation) {
+            this.send('selectTransaction', this.get('transaction'), aggregation);
         },
 
         selectSpan: function(span) {

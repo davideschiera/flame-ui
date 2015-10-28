@@ -1,0 +1,9 @@
+{{#if hasBlock}}
+    {{yield}}
+{{else}}
+    {{#if isSelected}}
+        <a href="#0" class="item -selected" {{action "setDropdownStatus" false}}>{{item.name}}</a>
+    {{else}}
+        <a href="#0" class="item" {{action "selectOption" item.value}}>{{item.name}}</a>
+    {{/if}}
+{{/if}}
