@@ -22,7 +22,7 @@
                 <th class="th -number">Date and Time</th>
                 <th class="th -string" colspan="3">Message</th>
             </thead>
-            <tbody class="tbody">
+            <tbody class="tbody -compact">
                 {{#each log key="@index" as |line|}}
                     <tr class="tr" style="color:{{line.col}}">
                         <td class="td -icon"><i class="material-icons" style="color:{{line.contCol}}">lens</i></td>

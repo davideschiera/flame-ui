@@ -3,6 +3,7 @@
     @row-hovered-bg:            fade(#000, 8%);
     @row-selected-bg:           fade(@color-primary, 10%);
     @row-selected-hovered-bg:   fade(@color-primary, 15%);
+    @compact-cell-padding:      2px;
 
     // Rulesets
     width:        100%;
@@ -52,6 +53,12 @@
             &:last-of-type .td {
                 border-color: transparent;
             }
+        }
+    }
+    .-compact {
+        &.tbody td, &.thead th {
+            padding-top: @compact-cell-padding;
+            padding-bottom: @compact-cell-padding;
         }
     }
 }
