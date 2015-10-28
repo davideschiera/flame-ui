@@ -4,6 +4,7 @@
     @row-selected-bg:           fade(@color-primary, 10%);
     @row-selected-hovered-bg:   fade(@color-primary, 15%);
     @compact-cell-padding:      2px;
+    @row-border-color:          #D9D9D9;
 
     // Rulesets
     width:        100%;
@@ -13,7 +14,7 @@
     // Children selectors
     .th, .td {
         padding: @padding-md;
-        border-bottom: 1px solid #D9D9D9;
+        border-bottom: 1px solid @row-border-color;
         vertical-align: middle;
         &.-number {
             text-align: right;
@@ -31,6 +32,10 @@
         font-weight: @semibold;
         color:       @black-light;
         .th {
+            border-right: 1px solid @row-border-color;
+            &:last-of-type {
+                border-right: 0;
+            }
         }
     }
     .tbody {
