@@ -18,9 +18,17 @@
         }
 
         // Children selectors
-        a {
-            color:           inherit;
-            text-decoration: none;
+        button {
+            // Clean button style
+            appearance:      none;
+            background:      none;
+            border:          0;
+            font-size:       inherit;
+            cursor:          pointer;
+            font-weight:     inherit;
+            &:focus, &:active {
+                outline: 0;
+            }
         }
     }
 }
