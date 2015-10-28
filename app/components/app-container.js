@@ -27,7 +27,7 @@ export default Ember.Component.extend({
     }),
 
     actions: {
-        selectTransaction: function(transaction, aggregation) {
+        selectTransaction: function(transaction, aggregation, defer) {
             var me = this;
             var currentAggregation = aggregation || get(this, 'aggregation') || 'avg';
 
@@ -45,12 +45,14 @@ export default Ember.Component.extend({
                         transactionData:    result
                     });
                 });
+                defer.resolve();
             } else {
                 setProperties(me, {
                     transaction:        null,
                     transactionData:    null,
                     span:               null
                 });
+                defer.reject();
             }
         },
 
