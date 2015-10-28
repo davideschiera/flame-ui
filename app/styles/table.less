@@ -1,4 +1,9 @@
 .table {
+    // Variables
+    @row-hovered-bg:            fade(#000, 8%);
+    @row-selected-bg:           fade(@color-primary, 10%);
+    @row-selected-hovered-bg:   fade(@color-primary, 15%);
+
     // Rulesets
     width:        100%;
     text-align:   left;
@@ -29,6 +34,18 @@
     }
     .tbody {
         .tr {
+            &.-link {
+                cursor: pointer;
+                &:hover {
+                    background-color: @row-hovered-bg;
+                }
+            }
+            &.-selected {
+                background-color: @row-selected-bg;
+                &:hover {
+                    background-color: @row-selected-hovered-bg;
+                }
+            }
             .td {
 
             }

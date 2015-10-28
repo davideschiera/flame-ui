@@ -12,13 +12,13 @@
             <th class="th -number">Max Time</th>
         </thead>
         <tbody class="tbody">
-            {{#each transactions key="@identity" as |transaction|}}
-                <tr class="tr" {{action "select" transaction.node}}>
+            {{#each transactions as |transaction|}}
+                <tr class="tr -link {{if (is-equal a=transaction.node b=selected) '-selected'}}" {{action "select" transaction.node}}>
                     <td class="td -string">{{transaction.node}}</td>
                     <td class="td -number">{{transaction.n}} calls</td>
-                    <td class="td -number"><a href="#0" {{action "select" transaction.node "avg"}}>{{transaction.avg}}</a></td>
-                    <td class="td -number"><a href="#0" {{action "select" transaction.node "min"}}>{{transaction.min}}</a></td>
-                    <td class="td -number"><a href="#0" {{action "select" transaction.node "max"}}>{{transaction.max}}</a></td>
+                    <td class="td -number"><a href="#0" {{action "select" transaction.node "avg" bubbles=false}}>{{transaction.avg}}</a></td>
+                    <td class="td -number"><a href="#0" {{action "select" transaction.node "min" bubbles=false}}>{{transaction.min}}</a></td>
+                    <td class="td -number"><a href="#0" {{action "select" transaction.node "max" bubbles=false}}>{{transaction.max}}</a></td>
                 </tr>
             {{/each}}
         </tbody>
