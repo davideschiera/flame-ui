@@ -28,7 +28,7 @@
             <table class="table">
                 <thead class="thead">
                     <th class="th -icon"></th>
-                    <th class="th -string">Container Name</th>
+                    <th class="th -string">Containers</th>
                 </thead>
                 <tbody class="tbody -compact">
                     {{#each legendItems as |item|}}
@@ -44,8 +44,8 @@
 
     {{#sd-panel-footer}}
         {{#if activeSpan}}
-            <strong>{{activeSpan.name}} informations –</strong>
-            Container Name:                 <b>{{activeSpan.container}}</b>
+            <strong>{{activeSpan.name}} –</strong>
+            Container:                      <b>{{activeSpan.container}}</b>
             Command Line:                   <b>{{activeSpan.container}}</b>
             Time in this node and childs:   <b>{{activeSpan.container}}</b>
             Time in this node:              <b>{{activeSpan.timeInNode}}</b>
