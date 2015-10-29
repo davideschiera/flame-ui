@@ -23,9 +23,9 @@
                 <th class="th -string" colspan="3">Message</th>
             </thead>
             <tbody class="tbody -compact">
-                {{#each log key="@index" as |line|}}
-                    <tr class="tr" style="color:{{line.col}}">
-                        <td class="td -icon"><i class="material-icons" style="color:{{line.contCol}}">lens</i></td>
+                {{#each lines key="@index" as |line|}}
+                    <tr class="tr" style={{line.color}}>
+                        <td class="td -icon"><i class="material-icons" style={{line.lineColor}}>lens</i></td>
                         <td class="td -string">{{line.containerName}}</td>
                         <td class="td -string">{{line.k}}</td>
                         <td class="td -number">{{line.t}}</td>

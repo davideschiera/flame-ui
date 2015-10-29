@@ -193,7 +193,7 @@ export default SDPanel.extend({
         return get(this, 'containerNameList').map(function(containerName) {
             return {
                 name:   containerName,
-                color:  get(this, 'colorStore').assignColor(containerName)
+                color:  new Ember.Handlebars.SafeString('color: ' + get(this, 'colorStore').assignColor(containerName))
             };
         }, this);
     }),
