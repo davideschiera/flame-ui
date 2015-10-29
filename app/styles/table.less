@@ -64,8 +64,15 @@
             }
         }
     }
+    .thead, .tr {
+        &.-no-border {
+            .th, .td {
+                border-bottom: 0;
+            }
+        }
+    }
     .-compact {
-        &.tbody td, &.thead th {
+        &.tbody .td, &.thead .th {
             padding-top: @compact-cell-padding;
             padding-bottom: @compact-cell-padding;
         }

@@ -1,6 +1,14 @@
-{{#each legendItems as |item|}}
-    <li class="item">
-        <i class="material-icons icon" style={{item.color}}>lens</i>
-        <span class="text">{{item.name}}</span>
-    </li>
-{{/each}}
+ <table class="table">
+    <thead class="thead">
+        <th class="th -icon"></th>
+        <th class="th -string">Container Name</th>
+    </thead>
+    <tbody class="tbody -compact">
+        {{#each legendItems as |item|}}
+            <tr class="tr -no-border" style={{line.color}}>
+                <td class="td -icon"><i class="material-icons" style={{item.color}}>lens</i></td>
+                <td class="td -string">{{item.name}}</td>
+            </tr>
+        {{/each}}
+    </tbody>
+</table>
