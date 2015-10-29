@@ -1,16 +1,17 @@
 <div class="flex-scaffholding -column">
     {{#sd-panel-header}}
         <h1 class="title">{{node}} {{op}}</h1>
+
         <div class="spacer"></div>
-        <label>Aggregation:</label>
-        {{sd-dropdown
-            action            = "changeAggregation"
-            changeAggregation = "changeAggregation"
-            items             = aggregationTypes
-            selectedOption    = op
-            label             = opLabel
-            buttonClasses     = "button -flat -primary -inline"
-        }}
+
+        <label>Aggregate by</label>
+        {{#sd-tabs-list activeTab=op as |list|}}
+            {{#each aggregationOptions as |option|}}
+                {{#sd-tab-item value=option.value activeTab=list.activeTab activateTab="activateTab" registerTab="registerTab" targetObject=list}}
+                    <button {{action "changeAggregation" option.value}}>{{option.name}}</button>
+                {{/sd-tab-item}}
+            {{/each}}
+        {{/sd-tabs-list}}
     {{/sd-panel-header}}
 
     <div class="flex-scaffholding -row flex-grow">

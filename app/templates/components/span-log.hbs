@@ -1,16 +1,16 @@
 <div class="flex-scaffholding -column">
     {{#sd-panel-header}}
-        <h1 class="title">
+        <label>
             Logs for
             {{#sd-tabs-list as |list|}}
-                {{#sd-tab-item activeTab=list.activeTab activateTab="activateTab" registerTab="registerTab" targetObject=list}}
+                {{#sd-tab-item value="1" activeTab=list.activeTab activateTab="activateTab" registerTab="registerTab" targetObject=list}}
                     <button {{action "selectMode" 'SPAN'}}>this span only</button>
                 {{/sd-tab-item}}
-                {{#sd-tab-item activeTab=list.activeTab activateTab="activateTab" registerTab="registerTab" targetObject=list}}
+                {{#sd-tab-item value="2" activeTab=list.activeTab activateTab="activateTab" registerTab="registerTab" targetObject=list}}
                     <button {{action "selectMode" 'SPAN_CHILD'}}>this span and children</button>
                 {{/sd-tab-item}}
             {{/sd-tabs-list}}
-        </h1>
+        </label>
     {{/sd-panel-header}}
 
     {{#sd-panel-content class="flex-grow -no-padding"}}
