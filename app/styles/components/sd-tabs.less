@@ -1,13 +1,17 @@
 .sd-tabs-list {
+    // Variables
+    @line-height: calc(~"1em + " @margin-md * 2);
+
+    // Rulesets
     display: inline;
     font-size: 0;
 
     .sd-tab-item {
         display:         inline-block;
-        line-height:     calc(~"1em + " @margin-md * 2);
+        line-height:     @line-height;
         margin:          -@margin-md 0;
-        padding:         0 @padding-md;
         font-size:       @size-title;
+        transition:      color 0.2s ease;
         &.-active {
             color:               @color-accent;
             box-shadow:          0 1px 0 0 @color-accent;
@@ -15,6 +19,9 @@
             background-size:     1px 2px;
             background-position: bottom;
             background-repeat:   repeat-x;
+        }
+        &:hover {
+            color:               @color-accent;
         }
 
         // Children selectors
@@ -26,6 +33,12 @@
             font-size:       inherit;
             cursor:          pointer;
             font-weight:     inherit;
+            color:           inherit;
+
+            // Custom style
+            padding:         0 @padding-md;
+            line-height:     @line-height;
+
             &:focus, &:active {
                 outline: 0;
             }

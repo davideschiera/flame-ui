@@ -8,7 +8,7 @@ export default Ember.Component.extend({
     // Register this tab as part of the parent tabs-list, doing so we'll know how many tabs have our list
     // and we can set the first tab as the default activated
     setup: Ember.on('didInsertElement', function() {
-       this.send('registerTab');
+        this.send('registerTab');
     }),
 
     // Use this property to know if the current tab is the active one
