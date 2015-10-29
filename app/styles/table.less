@@ -13,16 +13,17 @@
 
     // Children selectors
     .th, .td {
-        padding: @padding-sm @padding-md;
-        border-bottom: 1px solid @row-border-color;
+        padding:        @padding-sm @padding-md;
+        border-bottom:  1px solid @row-border-color;
         vertical-align: middle;
         &.-number {
             text-align: right;
         }
         &.-icon {
-            width: 2em;
-            text-align: center;
-            font-size: @icon-sm;
+            width:        1.2em;
+            text-align:   center;
+            font-size:    @icon-sm;
+            border-right: 0;
             * {
                 vertical-align: middle;
             }
@@ -32,6 +33,9 @@
         font-weight: @semibold;
         color:       @black-light;
         .th {
+            &.-icon {
+                &:extend(.table .th.-icon);
+            }
             border-right: 1px solid @row-border-color;
             &:last-of-type {
                 border-right: 0;
