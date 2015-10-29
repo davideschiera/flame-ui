@@ -7,6 +7,7 @@
     .rows (@i) when (@i > 0) {
       .row-@{i} {
         flex: @i;
+          flex-basis: @margin-md * (@i - 1);
       }
       .rows(@i - 1);
     }
