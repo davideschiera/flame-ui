@@ -25,7 +25,20 @@
         {{/sd-panel-content}}
 
         {{#sd-panel-sidebar}}
-            {{sd-legend legendItems=legendItems}}
+            <table class="table">
+                <thead class="thead">
+                    <th class="th -icon"></th>
+                    <th class="th -string">Container Name</th>
+                </thead>
+                <tbody class="tbody -compact">
+                    {{#each legendItems as |item|}}
+                        <tr class="tr -no-border" style={{line.color}}>
+                            <td class="td -icon"><i class="material-icons" style={{item.color}}>lens</i></td>
+                            <td class="td -string">{{item.name}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
         {{/sd-panel-sidebar}}
     </div>
 
