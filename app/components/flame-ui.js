@@ -200,8 +200,6 @@ export default SDPanel.extend({
 
     actions: {
         changeAggregation(value) {
-
-            console.log(value);
             this.sendAction('changeAggregation', value);
         }
     }
